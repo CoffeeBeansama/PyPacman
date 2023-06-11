@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e80d5b6f-498f-4d5f-89a9-88353bd44cd0" name="Changes" comment="" />
+    <list default="true" id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,7 +20,10 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="2QTlcUvxrt88jEbf9gsd5Fm6CeN" />
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2R2UODX50i1dMVCcNOjCJg1gYak" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -28,25 +31,24 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Dell/PycharmProjects/PyBattleCity",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+    "last_opened_file_path": "C:/Users/Dell/PycharmProjects/PyBattleCity/PyLevel.py"
   }
 }]]></component>
   <component name="RunManager">
-    <configuration name="PyMain" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+    <configuration name="Pypacman" type="PythonConfigurationType" factoryName="Python">
       <module name="PyPacman" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\Dell\PycharmProjects\venv\Scripts\python.exe" />
-      <option name="SDK_NAME" value="Python 3.9 (PycharmProjects)" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../PyBattleCity" />
+      <option name="SDK_HOME" value="C:\Users\Dell\PycharmProjects\PyPacman\venv\Scripts\python.exe" />
+      <option name="SDK_NAME" value="Python 3.9 (PyPacman)" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../PyBattleCity/PyMain.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -59,11 +61,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="e80d5b6f-498f-4d5f-89a9-88353bd44cd0" name="Changes" comment="" />
-      <created>1685385532224</created>
+      <changelist id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="" />
+      <created>1686447636190</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1685385532224</updated>
+      <updated>1686447636190</updated>
     </task>
     <servers />
   </component>
