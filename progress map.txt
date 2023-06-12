@@ -13,4 +13,11 @@ Map :
 	*Create a for loop that iterates over every item on map
 	*Make a prototype sprite at paint to use as sprite for every item in map
 	*Create an algorithm that draws a specific sprite and puts them on
-	 their location based on their coordinate on the map 
+	 their location based on their coordinate on the map
+
+Pacman :
+    Task 1: Movement
+
+	*Pacman movement logic: 
+		1: Pacman moves continually every frame and only changes direction on button pressed
+		2: Pacman cannot change direction unless it can find the first corner it can change direction to

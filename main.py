@@ -23,6 +23,7 @@ class Game:
 
             self.level.run()
             pg.display.update()
+            self.screen.fill("black")
             self.clock.tick(FPS)
 
 

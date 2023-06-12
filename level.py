@@ -1,6 +1,7 @@
 import pygame
 from tile import Tile
 from settings import *
+from Pacman import Pacman
 
 class Level:
 
@@ -8,7 +9,7 @@ class Level:
         self.screen = pg.display.get_surface()
 
         self.visible_sprites = pg.sprite.Group()
-
+        self.collision_sprites = pg.sprite.Group()
         self.createMap()
 
 
@@ -32,6 +33,11 @@ class Level:
                 if column == "b":
                     Tile(bigpellet, (x, y), [self.visible_sprites])
 
+                if column == "P":
+                    self.pacman = Pacman(pacman,(x,y),[self.visible_sprites],self.collision_sprites)
+
+
     def run(self):
         self.visible_sprites.draw(self.screen)
+        self.pacman.update()
 
