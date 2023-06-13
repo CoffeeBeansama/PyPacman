@@ -9,5 +9,5 @@ class Node(Entity):
 
         self.rect = self.image.get_rect(topleft=pos)
 
-        self.hitbox = self.rect.inflate(-20,-20)
+        self.hitbox = self.rect.inflate(0,0)
 

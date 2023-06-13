@@ -9,5 +9,5 @@ class Tile(Entity):
 
         self.rect = self.image.get_rect(topleft=pos)
 
-        self.hitbox = self.rect.inflate(-1,-1)
+        self.hitbox = self.rect.inflate(0,0)
 
