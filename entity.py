@@ -45,17 +45,11 @@ class Entity(pg.sprite.Sprite):
                     if self.direction.x < 0:  # moving left
                         self.hitbox.left = sprite.hitbox.right
 
-
-
-
         if direction == "Vertical":
             for sprite in self.collision_sprite:
                 if sprite.hitbox.colliderect(self.hitbox):
-
                     if self.direction.y > 0:  # moving down
-                        print("up")
                         self.hitbox.bottom = sprite.hitbox.top
-
 
                     if self.direction.y < 0:  # moving up
                         self.hitbox.top = sprite.hitbox.bottom

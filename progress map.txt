@@ -16,7 +16,7 @@ Map :
 	 their location based on their coordinate on the map
 
 Pacman :
-    Task 1: Movement
+    Task 1: Movement (Done) (!!! Refactor Needed !!!)
 
 	*Pacman movement logic: 
 		1: Pacman moves continually every frame and only changes direction on button pressed
