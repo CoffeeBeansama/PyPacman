@@ -28,12 +28,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/Dell/PycharmProjects/PyBoxes/PyBoxes/PyTile.py"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/PycharmProjects/PyBoxes/PyBoxes/PyTile.py&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager">
     <configuration name="Pypacman" type="PythonConfigurationType" factoryName="Python">
       <module name="PyPacman" />

@@ -21,9 +21,10 @@ class Game:
                     pg.quit()
                     sys.exit()
 
+            self.screen.fill("black")
             self.level.run()
             pg.display.update()
-            self.screen.fill("black")
+
             self.clock.tick(FPS)
 
 

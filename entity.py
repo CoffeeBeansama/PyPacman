@@ -5,6 +5,9 @@ class Entity(pg.sprite.Sprite):
         super().__init__(groups)
 
         self.direction = pg.math.Vector2()
+        self.next_direction = pg.math.Vector2()
+
+
 
 
 
@@ -19,6 +22,15 @@ class Entity(pg.sprite.Sprite):
         self.rect.center = self.hitbox.center
 
 
+
+    def NodeCollided(self):
+        for sprite in self.nodes:
+            if sprite.hitbox.colliderect(self.hitbox):
+                return True
+
+        return False
+
+
     def checkCollisions(self,direction):
 
         if direction == "Horizontal":
@@ -27,14 +39,20 @@ class Entity(pg.sprite.Sprite):
 
                     if self.direction.x > 0:  # moving right
                         self.hitbox.right = sprite.hitbox.left
+
                     if self.direction.x < 0:  # moving left
                         self.hitbox.left = sprite.hitbox.right
+
+
 
         if direction == "Vertical":
             for sprite in self.collision_sprite:
                 if sprite.hitbox.colliderect(self.hitbox):
 
+
                     if self.direction.y > 0:  # moving down
                         self.hitbox.bottom = sprite.hitbox.top
+
                     if self.direction.y < 0:  # moving up
                         self.hitbox.top = sprite.hitbox.bottom
+

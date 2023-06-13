@@ -1,7 +1,7 @@
 import pygame as pg
 from entity import Entity
 
-class Tile(Entity):
+class Node(Entity):
     def __init__(self,image,pos,group):
         super().__init__(group)
 
@@ -9,5 +9,5 @@ class Tile(Entity):
 
         self.rect = self.image.get_rect(topleft=pos)
 
-        self.hitbox = self.rect.inflate(-1,-1)
+        self.hitbox = self.rect.inflate(-20,-20)
 

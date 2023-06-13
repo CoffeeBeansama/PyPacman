@@ -2,6 +2,7 @@ import pygame
 from tile import Tile
 from settings import *
 from Pacman import Pacman
+from node import Node
 
 class Level:
 
@@ -10,6 +11,7 @@ class Level:
 
         self.visible_sprites = pg.sprite.Group()
         self.collision_sprites = pg.sprite.Group()
+        self.nodes_sprites = pg.sprite.Group()
         self.createMap()
 
 
@@ -25,7 +27,7 @@ class Level:
                     Tile(smolpellet,(x,y),[self.visible_sprites])
 
                 if column == "W":
-                    Tile(wall, (x, y), [self.visible_sprites])
+                    Tile(wall, (x, y), [self.visible_sprites,self.collision_sprites])
 
                 if column == "B":
                     Tile(blank, (x, y), [self.visible_sprites])
@@ -33,8 +35,11 @@ class Level:
                 if column == "b":
                     Tile(bigpellet, (x, y), [self.visible_sprites])
 
+                if column == "N":
+                    Node(node, (x, y), [self.visible_sprites,self.nodes_sprites])
+
                 if column == "P":
-                    self.pacman = Pacman(pacman,(x,y),[self.visible_sprites],self.collision_sprites)
+                    self.pacman = Pacman(pacman,(x,y),[self.visible_sprites],self.collision_sprites,self.nodes_sprites)
 
 
     def run(self):
