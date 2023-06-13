@@ -37,49 +37,66 @@ class Pacman(Entity):
         self.next_direction.x = value1
         self.next_direction.y = value2
 
-    def get_movement(self,direction):
+    def setDirection(self,direction):
+
+
 
         if self.current_direction == "Up":
             self.savePreviousDirection(direction)
 
-            if not self.NodeCollided():
-                direction.x = self.previous_direction.x
-                direction.y = self.previous_direction.y
-            else:
+            if self.previous_direction.y == 1:
                 self.VerticalMovement(direction, -1)
-                self.setNextDirection(0, -1)
+            else:
+                if not self.NodeCollided():
+                    direction.x = self.previous_direction.x
+                    direction.y = self.previous_direction.y
 
+                else:
+                    self.VerticalMovement(direction, -1)
+                    self.setNextDirection(0, -1)
 
         elif self.current_direction == "Down":
             self.savePreviousDirection(direction)
-            if not self.NodeCollided():
-                direction.x = self.next_direction.x
-                direction.y = self.next_direction.y
-
-            else:
+            if self.previous_direction.y == -1:
                 self.VerticalMovement(direction, 1)
-                self.setNextDirection(0, 1)
+            else:
+                if not self.NodeCollided():
+                    direction.x = self.previous_direction.x
+                    direction.y = self.previous_direction.y
 
+                else:
+                    self.VerticalMovement(direction, 1)
+                    self.setNextDirection(0, 1)
 
         elif self.current_direction == "Left":
             self.savePreviousDirection(direction)
-            if not self.NodeCollided():
-                direction.x = self.next_direction.x
-                direction.y = self.next_direction.y
-
-            else:
+            if self.previous_direction.x == 1:
                 self.HorizontalMovement(direction, -1)
-                self.setNextDirection(-1, 0)
+            else:
+
+                if not self.NodeCollided():
+                    direction.x = self.previous_direction.x
+                    direction.y = self.previous_direction.y
+
+
+                else:
+                    self.HorizontalMovement(direction, -1)
+                    self.setNextDirection(-1, 0)
 
         elif self.current_direction == "Right":
-            self.savePreviousDirection(direction)
-            if not self.NodeCollided():
-                direction.x = self.next_direction.x
-                direction.y = self.next_direction.y
 
-            else:
+            self.savePreviousDirection(direction)
+            if self.previous_direction.x == -1:
                 self.HorizontalMovement(direction, 1)
-                self.setNextDirection(1, 0)
+            else:
+                if not self.NodeCollided():
+
+                    direction.x = self.previous_direction.x
+                    direction.y = self.previous_direction.y
+
+                else:
+                    self.HorizontalMovement(direction, 1)
+                    self.setNextDirection(1, 0)
 
 
 
@@ -107,7 +124,7 @@ class Pacman(Entity):
     def update(self):
         print(self.current_direction)
         self.get_inputs()
-        self.get_movement(self.direction)
+        self.setDirection(self.direction)
         self.movement(speed)
 
 
