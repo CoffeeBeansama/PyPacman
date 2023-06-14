@@ -21,3 +21,8 @@ Pacman :
 	*Pacman movement logic: 
 		1: Pacman moves continually every frame and only changes direction on button pressed
 		2: Pacman cannot change direction unless it can find the first corner it can change direction to
+
+Pellet :
+    Task 1: Collision
+
+	*Pellets get destroyed upon collision with pacman

@@ -38,8 +38,8 @@ class Level:
                 if column == "N":
                     Node(node, (x, y), [self.visible_sprites,self.nodes_sprites])
 
-                if column == "P":
-                    self.pacman = Pacman(pacman,(x,y),[self.visible_sprites],self.collision_sprites,self.nodes_sprites)
+
+        self.pacman = Pacman(pacman,(300,360),[self.visible_sprites],self.collision_sprites,self.nodes_sprites)
 
 
     def run(self):
