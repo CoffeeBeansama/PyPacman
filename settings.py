@@ -2,6 +2,9 @@ import pygame as pg
 
 WIDTH,HEIGHT = (600,650)
 
+directions = ["Horizontal","Vertical"]
+direction_axis = [-1,1]
+
 blank = "Sprites/Blank.png"
 wall = "Sprites/Wall.png"
 smolpellet = "Sprites/smol pellet.png"
@@ -14,8 +17,8 @@ inky = "Sprites/Inky.png"
 clyde = "Sprites/Clyde.png"
 gate = "Sprites/gate.png"
 
-
-speed = 1
+ghost_speed = 1
+pacman_Speed = 1.2
 
 tilesize = 20
 FPS = 60
@@ -38,7 +41,7 @@ map = [
 ["B","B","B","B","B","B","W","*","W","W","N"," "," ","N","E","E","N"," "," ","N","W","W","*","W","B","B","B","B","B","B"],
 ["B","B","B","B","B","B","W","*","W","W"," ","W","W","W","G","G","W","W","W"," ","W","W","*","W","B","B","B","B","B","B"],
 ["B","W","W","W","W","W","W","*","W","W"," ","W","B","B","B","B","B","B","W"," ","W","W","*","W","W","W","W","W","W","B"],
-["B"," "," "," "," "," "," ","N","*"," ","N","W","B","B","B","B","B","B","W","N"," ","*","N"," "," "," "," "," "," ","B"],
+["B"," "," "," "," "," ","W","N","*"," ","N","W","B","B","B","B","B","B","W","N"," ","*","N","W"," "," "," "," "," ","B"],
 ["B","W","W","W","W","W","W","*","W","W"," ","W","B","B","B","B","B","B","W"," ","W","W","*","W","W","W","W","W","W","B"],
 ["B","B","B","B","B","B","W","*","W","W"," ","W","W","W","W","W","W","W","W"," ","W","W","*","W","B","B","B","B","B","B"],
 ["B","B","B","B","B","B","W","*","W","W","N"," "," "," "," "," "," "," "," ","N","W","W","*","W","B","B","B","B","B","B"],

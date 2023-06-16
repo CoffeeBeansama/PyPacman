@@ -9,6 +9,7 @@ class Entity(pg.sprite.Sprite):
         self.previous_direction = pg.math.Vector2()
 
 
+
         self.wallCollided = False
 
 
@@ -22,7 +23,20 @@ class Entity(pg.sprite.Sprite):
         self.checkCollisions("Vertical")
         self.rect.center = self.hitbox.center
 
+    def HorizontalMovement(self,direction,value):
+        direction.y = 0
+        direction.x = value
+    def VerticalMovement(self,direction,value):
+        direction.y = value
+        direction.x = 0
 
+    def savePreviousDirection(self, direction):
+        self.previous_direction.x = direction.x
+        self.previous_direction.y = direction.y
+
+    def setNextDirection(self, value1, value2):
+        self.next_direction.x = value1
+        self.next_direction.y = value2
 
     def NodeCollided(self):
         for sprite in self.nodes:

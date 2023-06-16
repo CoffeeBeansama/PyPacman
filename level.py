@@ -70,10 +70,10 @@ class Level:
                 if column == "N":
                     Node(node, (x, y), [self.visible_sprites,self.nodes_sprites])
 
-        self.blinky = Blinky(blinky,self.blinky_pos,[self.visible_sprites],"Ghost")
-        self.pinky = Pinky(pinky,self.pinky_pos,[self.visible_sprites],"Ghost")
-        self.inky = Inky(inky, self.inky_pos, [self.visible_sprites], "Ghost")
-        self.clyde = Clyde(clyde, self.clyde_pos, [self.visible_sprites], "Ghost")
+        self.blinky = Blinky(blinky,self.blinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,"Ghost")
+        self.pinky = Pinky(pinky,self.pinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,"Ghost")
+        self.inky = Inky(inky, self.inky_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites, "Ghost")
+        self.clyde = Clyde(clyde, self.clyde_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites, "Ghost")
 
         self.pacman = Pacman(pacman,(300,360),[self.visible_sprites,self.pacmanSprite],self.collision_sprites,self.nodes_sprites)
 

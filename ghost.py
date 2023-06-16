@@ -1,6 +1,9 @@
+import random
 from abc import ABC, abstractmethod
 import pygame as pg
+from entity import Entity
 from enum import Enum
+from settings import *
 
 
 class States(Enum):
@@ -59,6 +62,11 @@ class BaseState(ABC):
         newState.EnterState()
         self.main.currentState = newState
 
+    def RandomValue(self):
+        direction = random.choice(directions)
+        value = random.choice(direction_axis)
+        return direction,value
+
 
 class HomeState(BaseState):
 
@@ -84,10 +92,24 @@ class HomeState(BaseState):
 class ScatterState(BaseState):
 
     def EnterState(self):
-        self.main.rect.center = self.main.gatePos
+        self.main.hitbox.center = self.main.gatePos
+
+        self.main.HorizontalMovement(self.main.direction,self.RandomValue()[1])
+
+    def SetRandomDirection(self,main):
+        if main.NodeCollided():
+            main.savePreviousDirection(main.direction)
+            if self.RandomValue()[0] == "Horizontal":
+
+                main.HorizontalMovement(main.direction,self.RandomValue()[1])
+            elif self.RandomValue()[0] == "Vertical":
+                main.VerticalMovement(main.direction,self.RandomValue()[1])
+
 
     def UpdateState(self):
         self.CheckSwitchState()
+        self.SetRandomDirection(self.main)
+        self.main.movement(ghost_speed)
 
     def CheckSwitchState(self):
         pass
@@ -125,17 +147,22 @@ class FrightenedState(BaseState):
         pass
 
 
-class Blinky(pg.sprite.Sprite):
+class Blinky(Entity):
 
-    def __init__(self, image, pos, group, object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
         super().__init__(group)
 
         self.homeDuration = 1000
         self.startingPos = (290, 290)
         self.gatePos = (290,250)
 
+        self.collision_sprite = collidableSprite
+        self.nodes = node_sprite
+    
+
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
+        self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
         self.stateCache = StateCache(self)
@@ -148,18 +175,22 @@ class Blinky(pg.sprite.Sprite):
         self.currentState.UpdateState()
 
 
-class Pinky(pg.sprite.Sprite):
+class Pinky(Entity):
 
-    def __init__(self, image, pos, group, object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
         super().__init__(group)
 
 
-        self.homeDuration = 3000
+        self.homeDuration = 5000
         self.startingPos = (310, 290)
         self.gatePos = (310, 250)
 
+        self.collision_sprite = collidableSprite
+        self.nodes = node_sprite
+
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
+        self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
         self.stateCache = StateCache(self)
@@ -170,17 +201,21 @@ class Pinky(pg.sprite.Sprite):
         self.currentState.UpdateState()
 
 
-class Inky(pg.sprite.Sprite):
+class Inky(Entity):
 
-    def __init__(self, image, pos, group, object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
         super().__init__(group)
 
-        self.homeDuration = 5000
+        self.homeDuration = 9000
         self.startingPos = (290, 310)
         self.gatePos = (290, 250)
 
+        self.collision_sprite = collidableSprite
+        self.nodes = node_sprite
+
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
+        self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
         self.stateCache = StateCache(self)
@@ -191,17 +226,23 @@ class Inky(pg.sprite.Sprite):
         self.currentState.UpdateState()
 
 
-class Clyde(pg.sprite.Sprite):
+class Clyde(Entity):
 
-    def __init__(self, image, pos, group, object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
         super().__init__(group)
 
-        self.homeDuration = 7000
+        self.homeDuration = 12000
         self.startingPos = (310, 310)
         self.gatePos = (310, 250)
 
+        self.collision_sprite = collidableSprite
+        self.nodes = node_sprite
+        self.direction = pg.math.Vector2()
+        self.previous_direction = pg.math.Vector2()
+
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
+        self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
         self.stateCache = StateCache(self)

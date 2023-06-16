@@ -20,22 +20,8 @@ class Pacman(Entity):
         self.HorizontalMovement(self.direction, -1)
 
 
-    def HorizontalMovement(self,direction,value):
-        direction.y = 0
-        direction.x = value
-    def VerticalMovement(self,direction,value):
-        direction.y = value
-        direction.x = 0
-
-    def savePreviousDirection(self,direction):
-        self.previous_direction.x = direction.x
-        self.previous_direction.y = direction.y
 
 
-
-    def setNextDirection(self,value1,value2):
-        self.next_direction.x = value1
-        self.next_direction.y = value2
 
     def setDirection(self,direction):
 
@@ -117,6 +103,6 @@ class Pacman(Entity):
     def update(self):
         self.get_inputs()
         self.setDirection(self.direction)
-        self.movement(speed)
+        self.movement(pacman_Speed)
 
 
