@@ -8,11 +8,19 @@ smolpellet = "Sprites/smol pellet.png"
 bigpellet = "Sprites/big pellet.png"
 pacman = "Sprites/Pacman.png"
 node = "Sprites/node.png"
+blinky = "Sprites/Blinky.png"
+pinky = "Sprites/Pinky.png"
+inky = "Sprites/Inky.png"
+clyde = "Sprites/Clyde.png"
+gate = "Sprites/gate.png"
+
 
 speed = 1
 
 tilesize = 20
 FPS = 60
+
+# * => small pellet, b => big pellet, P => Pacman, W => Wall, G1 => Blinky, G2 => Pinky, G3 => Inky, G4 => Clyde, E=> Exit
 
 map = [
 ["B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"],
@@ -27,8 +35,8 @@ map = [
 ["B","W","N","*","*","*","*","N","W","W","N","*","*","N","W","W","N","*","*","N","W","W","N","*","*","*","*","N","W","B"],
 ["B","W","W","W","W","W","W","*","W","W","W","W","W"," ","W","W"," ","W","W","W","W","W","*","W","W","W","W","W","W","B"],
 ["B","B","B","B","B","B","W","*","W","W","W","W","W"," ","W","W"," ","W","W","W","W","W","*","W","B","B","B","B","B","B"],
-["B","B","B","B","B","B","W","*","W","W","N"," "," ","N"," "," ","N"," "," ","N","W","W","*","W","B","B","B","B","B","B"],
-["B","B","B","B","B","B","W","*","W","W"," ","W","W","W","W","W","W","W","W"," ","W","W","*","W","B","B","B","B","B","B"],
+["B","B","B","B","B","B","W","*","W","W","N"," "," ","N","E","E","N"," "," ","N","W","W","*","W","B","B","B","B","B","B"],
+["B","B","B","B","B","B","W","*","W","W"," ","W","W","W","G","G","W","W","W"," ","W","W","*","W","B","B","B","B","B","B"],
 ["B","W","W","W","W","W","W","*","W","W"," ","W","B","B","B","B","B","B","W"," ","W","W","*","W","W","W","W","W","W","B"],
 ["B"," "," "," "," "," "," ","N","*"," ","N","W","B","B","B","B","B","B","W","N"," ","*","N"," "," "," "," "," "," ","B"],
 ["B","W","W","W","W","W","W","*","W","W"," ","W","B","B","B","B","B","B","W"," ","W","W","*","W","W","W","W","W","W","B"],

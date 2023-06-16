@@ -4,6 +4,7 @@ from settings import *
 from Pacman import Pacman
 from node import Node
 from pellet import *
+from ghost import *
 class Level:
 
     def __init__(self):
@@ -14,6 +15,11 @@ class Level:
         self.collision_sprites = pg.sprite.Group()
         self.nodes_sprites = pg.sprite.Group()
         self.pacmanSprite = pg.sprite.Group()
+
+        self.blinky_pos = (280,280)
+        self.pinky_pos = (300,280)
+        self.inky_pos = (280, 300)
+        self.clyde_pos = (300, 300)
         self.createMap()
 
 
@@ -48,8 +54,15 @@ class Level:
                 if column == "W":
                     Tile(wall, (x, y), [self.visible_sprites,self.collision_sprites])
 
+                if column == "E":
+                    self.Exit1Tile = Tile(blank,(x,y),[self.visible_sprites])
+                    self.Exit2Tile = Tile(blank,(x,y),[self.visible_sprites])
+
                 if column == "B":
                     Tile(blank, (x, y), [self.visible_sprites])
+
+                if column == "G":
+                    Tile(gate, (x, y), [self.visible_sprites,self.collision_sprites])
 
                 if column == "b":
                     Big_pellet(bigpellet, (x, y), [self.visible_sprites,self.eatableSprites],"pellet")
@@ -57,6 +70,10 @@ class Level:
                 if column == "N":
                     Node(node, (x, y), [self.visible_sprites,self.nodes_sprites])
 
+        self.blinky = Blinky(blinky,self.blinky_pos,[self.visible_sprites],"Ghost")
+        self.pinky = Pinky(pinky,self.pinky_pos,[self.visible_sprites],"Ghost")
+        self.inky = Inky(inky, self.inky_pos, [self.visible_sprites], "Ghost")
+        self.clyde = Clyde(clyde, self.clyde_pos, [self.visible_sprites], "Ghost")
 
         self.pacman = Pacman(pacman,(300,360),[self.visible_sprites,self.pacmanSprite],self.collision_sprites,self.nodes_sprites)
 
@@ -64,6 +81,13 @@ class Level:
     def run(self):
         self.visible_sprites.draw(self.screen)
         self.pacmanEatLogic()
+
+        self.blinky.update()
+        self.pinky.update()
+        self.inky.update()
+        self.clyde.update()
+
         self.pacman.update()
+
 
 

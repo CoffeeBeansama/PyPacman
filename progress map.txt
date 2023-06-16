@@ -23,6 +23,16 @@ Pacman :
 		2: Pacman cannot change direction unless it can find the first corner it can change direction to
 
 Pellet :
-    Task 1: Collision
+    Task 1: Collision (Done)
 
 	*Pellets get destroyed upon collision with pacman
+
+
+Ghost :
+    
+    Four Ghost: Blinky,Pinky,Inky,Clyde
+
+    Ghost Behaviors: Scatter,Chase,Frightened,Home
+
+    Task 1: 
+	*make a base class that all four ghost inherits
