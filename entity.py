@@ -1,4 +1,7 @@
+import random
+import sys
 import pygame as pg
+from settings import *
 
 class Entity(pg.sprite.Sprite):
     def __init__(self,groups):
@@ -39,11 +42,57 @@ class Entity(pg.sprite.Sprite):
         self.next_direction.y = value2
 
     def NodeCollided(self):
+
         for sprite in self.nodes:
             if sprite.hitbox.center == self.hitbox.center:
+
                 return True
 
         return False
+
+
+
+
+    def ScatterDirection(self,direction):
+
+        if self.NodeCollided():
+
+            randomDirection = random.randrange(len(self.node_object.availableDirections))
+
+            x = self.node_object.availableDirections[randomDirection][0]
+            y = self.node_object.availableDirections[randomDirection][1]
+
+            direction.x = x
+            direction.y = y
+
+    def ChaseDirection(self):
+
+            direction = pg.math.Vector2()
+            minDistance = sys.float_info.max
+
+            for directions in self.node_object.availableDirections:
+
+                newPosition = pg.math.Vector2(self.rect.center + pg.math.Vector2(directions[0],directions[1]))
+                distance = (self.player.rect.center - newPosition).magnitude_squared()
+
+                if distance < minDistance:
+                    direction.x = directions[0]
+                    direction.y = directions[1]
+
+                    minDistance = distance
+
+
+            self.setDirection(direction)
+
+
+
+
+
+
+
+    def setDirection(self,direction):
+        if self.NodeCollided():
+            self.direction = direction
 
 
     def checkCollisions(self,direction):

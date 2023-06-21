@@ -1,4 +1,5 @@
 import random
+import sys
 from abc import ABC, abstractmethod
 import pygame as pg
 from entity import Entity
@@ -68,6 +69,7 @@ class BaseState(ABC):
         return direction,value
 
 
+
 class HomeState(BaseState):
 
     def EnterState(self):
@@ -96,23 +98,19 @@ class ScatterState(BaseState):
 
         self.main.HorizontalMovement(self.main.direction,self.RandomValue()[1])
 
-    def SetRandomDirection(self,main):
-        if main.NodeCollided():
-            main.savePreviousDirection(main.direction)
-            if self.RandomValue()[0] == "Horizontal":
-
-                main.HorizontalMovement(main.direction,self.RandomValue()[1])
-            elif self.RandomValue()[0] == "Vertical":
-                main.VerticalMovement(main.direction,self.RandomValue()[1])
-
 
     def UpdateState(self):
         self.CheckSwitchState()
-        self.SetRandomDirection(self.main)
+
+        self.main.ScatterDirection(self.main.direction)
         self.main.movement(ghost_speed)
 
     def CheckSwitchState(self):
-        pass
+        currentTime = pg.time.get_ticks()
+
+        if currentTime - 0 >= self.main.ScatterDuration:
+            self.SwitchState(self.stateCache.ChaseState())
+
 
     def ExitState(self):
         pass
@@ -122,8 +120,29 @@ class ChaseState(BaseState):
     def EnterState(self):
         pass
 
+
+    def get_PlayerDistance(self):
+        enemy_vec = pg.math.Vector2(self.main.rect.center)
+        player_vec = pg.math.Vector2(self.main.player.rect.center)
+        distance = (player_vec - enemy_vec).magnitude_squared()
+
+        if distance > 0:
+            direction = (player_vec - enemy_vec).normalize()
+        else:
+            direction = pg.math.Vector2()
+
+        return (distance,direction)
+
     def UpdateState(self):
-        self.CheckSwitchState()
+
+        distance = self.get_PlayerDistance()[0]
+
+        if distance > 0:
+            self.main.setDirection(self.get_PlayerDistance()[1])
+
+
+        self.main.movement(ghost_speed)
+
 
     def CheckSwitchState(self):
         pass
@@ -149,16 +168,20 @@ class FrightenedState(BaseState):
 
 class Blinky(Entity):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player):
         super().__init__(group)
 
         self.homeDuration = 1000
+        self.ScatterDuration = 12000
         self.startingPos = (290, 290)
         self.gatePos = (290,250)
-
+        
+        self.player = player
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
-    
+        self.node_object = node_object
+
+
 
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -177,16 +200,21 @@ class Blinky(Entity):
 
 class Pinky(Entity):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player):
         super().__init__(group)
 
 
         self.homeDuration = 5000
+        self.ScatterDuration = 12000
         self.startingPos = (310, 290)
         self.gatePos = (310, 250)
 
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
+        self.node_object = node_object
+
+        self.player = player
+        self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -198,20 +226,26 @@ class Pinky(Entity):
         self.currentState.EnterState()
 
     def update(self):
+
         self.currentState.UpdateState()
 
 
 class Inky(Entity):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player):
         super().__init__(group)
 
         self.homeDuration = 9000
+        self.ScatterDuration = 12000
         self.startingPos = (290, 310)
         self.gatePos = (290, 250)
 
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
+        self.node_object = node_object
+        self.player = player
+
+        self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -228,17 +262,20 @@ class Inky(Entity):
 
 class Clyde(Entity):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,object_type):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player):
         super().__init__(group)
 
         self.homeDuration = 12000
+        self.ScatterDuration = 12000
         self.startingPos = (310, 310)
         self.gatePos = (310, 250)
 
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
-        self.direction = pg.math.Vector2()
-        self.previous_direction = pg.math.Vector2()
+        self.node_object = node_object
+        self.player = player
+
+        self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)

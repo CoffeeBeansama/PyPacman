@@ -2,7 +2,7 @@ import pygame
 from tile import Tile
 from settings import *
 from Pacman import Pacman
-from node import Node
+from node import *
 from pellet import *
 from ghost import *
 class Level:
@@ -12,6 +12,7 @@ class Level:
 
         self.eatableSprites = pg.sprite.Group()
         self.visible_sprites = pg.sprite.Group()
+        self.invisible_sprites = pg.sprite.Group()
         self.collision_sprites = pg.sprite.Group()
         self.nodes_sprites = pg.sprite.Group()
         self.pacmanSprite = pg.sprite.Group()
@@ -21,6 +22,8 @@ class Level:
         self.inky_pos = (280, 300)
         self.clyde_pos = (300, 300)
         self.createMap()
+        self.getNodeDirection(self.node)
+
 
 
     def pacmanEatLogic(self):
@@ -48,11 +51,16 @@ class Level:
                 x = column_index * tilesize
                 y = row_index * tilesize
 
+                top = row_index * tilesize - tilesize
+                bottom = row_index * tilesize + tilesize
+                left = column_index * tilesize - tilesize
+                right = column_index * tilesize + tilesize
+
                 if column == "*":
                     Smol_pellet(smolpellet,(x,y),[self.visible_sprites,self.eatableSprites],"pellet")
 
                 if column == "W":
-                    Tile(wall, (x, y), [self.visible_sprites,self.collision_sprites])
+                    self.walls = Tile(wall, (x, y), [self.visible_sprites,self.collision_sprites])
 
                 if column == "E":
                     self.Exit1Tile = Tile(blank,(x,y),[self.visible_sprites])
@@ -67,24 +75,53 @@ class Level:
                 if column == "b":
                     Big_pellet(bigpellet, (x, y), [self.visible_sprites,self.eatableSprites],"pellet")
 
+
                 if column == "N":
-                    Node(node, (x, y), [self.visible_sprites,self.nodes_sprites])
+                    self.node = Node(node, (x, y), [self.visible_sprites, self.nodes_sprites],top,bottom,left,right)
 
-        self.blinky = Blinky(blinky,self.blinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,"Ghost")
-        self.pinky = Pinky(pinky,self.pinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,"Ghost")
-        self.inky = Inky(inky, self.inky_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites, "Ghost")
-        self.clyde = Clyde(clyde, self.clyde_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites, "Ghost")
 
-        self.pacman = Pacman(pacman,(300,360),[self.visible_sprites,self.pacmanSprite],self.collision_sprites,self.nodes_sprites)
 
+
+
+
+        self.pacman = Pacman(pacman, (300, 360), [self.visible_sprites, self.pacmanSprite],self.collision_sprites,self.nodes_sprites)
+
+        self.blinky = Blinky(blinky,self.blinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node,"Ghost",self.pacman)
+        self.pinky = Pinky(pinky,self.pinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node,"Ghost",self.pacman)
+        self.inky = Inky(inky, self.inky_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node, "Ghost",self.pacman)
+        self.clyde = Clyde(clyde, self.clyde_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node, "Ghost",self.pacman)
+
+
+    def Vector2(self,x,y):
+        direction = pg.math.Vector2()
+
+        direction.x = x
+        direction.y = y
+
+        return round(direction.x),round(direction.y)
+
+
+    def getNodeDirection(self,node):
+
+        if node.top != None:
+            node.availableDirections.append(self.Vector2(0,-1))
+
+        if node.bottom != None:
+            node.availableDirections.append(self.Vector2(0,-1))
+        if node.left != None:
+            node.availableDirections.append(self.Vector2(-1,0))
+        if node.right != None:
+            node.availableDirections.append(self.Vector2(1,0))
 
     def run(self):
         self.visible_sprites.draw(self.screen)
         self.pacmanEatLogic()
 
+
         self.blinky.update()
         self.pinky.update()
         self.inky.update()
+
         self.clyde.update()
 
         self.pacman.update()

@@ -17,7 +17,7 @@ inky = "Sprites/Inky.png"
 clyde = "Sprites/Clyde.png"
 gate = "Sprites/gate.png"
 
-ghost_speed = 1
+ghost_speed = 0.9
 pacman_Speed = 1.2
 
 tilesize = 20
@@ -60,3 +60,6 @@ map = [
 ["B","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","B"],
 ["B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B","B"],
 ]
+
+
+
