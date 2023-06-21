@@ -45,6 +45,7 @@ class Entity(pg.sprite.Sprite):
 
         for sprite in self.nodes:
             if sprite.hitbox.center == self.hitbox.center:
+                self.node_object = sprite
 
                 return True
 
@@ -58,10 +59,13 @@ class Entity(pg.sprite.Sprite):
         if self.NodeCollided():
 
             randomDirection = random.randrange(len(self.node_object.availableDirections))
+            print(self.node_object.rect.x)
+            print(self.node_object.rect.y)
 
             x = self.node_object.availableDirections[randomDirection][0]
             y = self.node_object.availableDirections[randomDirection][1]
-
+            print(f"x is : {x}")
+            print(f"y is : {y}")
             direction.x = x
             direction.y = y
 
@@ -76,8 +80,11 @@ class Entity(pg.sprite.Sprite):
                 distance = (self.player.rect.center - newPosition).magnitude_squared()
 
                 if distance < minDistance:
+
                     direction.x = directions[0]
+
                     direction.y = directions[1]
+
 
                     minDistance = distance
 

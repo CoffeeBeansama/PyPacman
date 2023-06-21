@@ -22,7 +22,7 @@ class Level:
         self.inky_pos = (280, 300)
         self.clyde_pos = (300, 300)
         self.createMap()
-        self.getNodeDirection(self.node)
+
 
 
 
@@ -51,15 +51,13 @@ class Level:
                 x = column_index * tilesize
                 y = row_index * tilesize
 
-                top = row_index * tilesize - tilesize
-                bottom = row_index * tilesize + tilesize
-                left = column_index * tilesize - tilesize
-                right = column_index * tilesize + tilesize
+
 
                 if column == "*":
                     Smol_pellet(smolpellet,(x,y),[self.visible_sprites,self.eatableSprites],"pellet")
 
                 if column == "W":
+
                     self.walls = Tile(wall, (x, y), [self.visible_sprites,self.collision_sprites])
 
                 if column == "E":
@@ -75,13 +73,21 @@ class Level:
                 if column == "b":
                     Big_pellet(bigpellet, (x, y), [self.visible_sprites,self.eatableSprites],"pellet")
 
-
                 if column == "N":
-                    self.node = Node(node, (x, y), [self.visible_sprites, self.nodes_sprites],top,bottom,left,right)
+                    self.node = Node(node, (x, y), [self.visible_sprites, self.nodes_sprites])
 
-
-
-
+                    #top
+                    if map[row_index-1][column_index] != "W":
+                        self.node.availableDirections.append(self.Vector2(0,-1))
+                    #bottom
+                    if map[row_index+1][column_index] != "W":
+                        self.node.availableDirections.append(self.Vector2(0,1))
+                    #left
+                    if map[row_index][column_index-1] != "W":
+                        self.node.availableDirections.append(self.Vector2(-1,0))
+                    #right
+                    if map[row_index][column_index+1] != "W":
+                        self.node.availableDirections.append(self.Vector2(1,0))
 
 
         self.pacman = Pacman(pacman, (300, 360), [self.visible_sprites, self.pacmanSprite],self.collision_sprites,self.nodes_sprites)
@@ -90,7 +96,6 @@ class Level:
         self.pinky = Pinky(pinky,self.pinky_pos,[self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node,"Ghost",self.pacman)
         self.inky = Inky(inky, self.inky_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node, "Ghost",self.pacman)
         self.clyde = Clyde(clyde, self.clyde_pos, [self.visible_sprites],self.collision_sprites,self.nodes_sprites,self.node, "Ghost",self.pacman)
-
 
     def Vector2(self,x,y):
         direction = pg.math.Vector2()
@@ -101,17 +106,6 @@ class Level:
         return round(direction.x),round(direction.y)
 
 
-    def getNodeDirection(self,node):
-
-        if node.top != None:
-            node.availableDirections.append(self.Vector2(0,-1))
-
-        if node.bottom != None:
-            node.availableDirections.append(self.Vector2(0,-1))
-        if node.left != None:
-            node.availableDirections.append(self.Vector2(-1,0))
-        if node.right != None:
-            node.availableDirections.append(self.Vector2(1,0))
 
     def run(self):
         self.visible_sprites.draw(self.screen)

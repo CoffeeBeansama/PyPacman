@@ -118,29 +118,12 @@ class ScatterState(BaseState):
 class ChaseState(BaseState):
 
     def EnterState(self):
-        pass
+        print("Entered chase state")
 
-
-    def get_PlayerDistance(self):
-        enemy_vec = pg.math.Vector2(self.main.rect.center)
-        player_vec = pg.math.Vector2(self.main.player.rect.center)
-        distance = (player_vec - enemy_vec).magnitude_squared()
-
-        if distance > 0:
-            direction = (player_vec - enemy_vec).normalize()
-        else:
-            direction = pg.math.Vector2()
-
-        return (distance,direction)
 
     def UpdateState(self):
 
-        distance = self.get_PlayerDistance()[0]
-
-        if distance > 0:
-            self.main.setDirection(self.get_PlayerDistance()[1])
-
-
+        self.main.ChaseDirection()
         self.main.movement(ghost_speed)
 
 
