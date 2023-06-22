@@ -3,7 +3,7 @@ from entity import Entity
 from settings import *
 
 class Pacman(Entity):
-    def __init__(self,image,pos,sprite_group,collidable_sprite,node_sprite):
+    def __init__(self,image,pos,sprite_group,collidable_sprite,node_sprite,portal_sprite):
         super().__init__(sprite_group)
 
         self.image = pg.image.load(image).convert_alpha()
@@ -12,6 +12,9 @@ class Pacman(Entity):
         self.nodes = node_sprite
         self.hitbox = self.rect.inflate(0,0)
         self.collision_sprite = collidable_sprite
+
+        self.PowerUp = False
+        self.portals = portal_sprite
 
         self.current_direction = "Left"
         self.next_direction.x = -1
@@ -102,6 +105,7 @@ class Pacman(Entity):
 
     def update(self):
         self.get_inputs()
+        self.CheckPortalCollision()
         self.setDirection(self.direction)
         self.movement(pacman_Speed)
 

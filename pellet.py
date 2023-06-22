@@ -27,21 +27,22 @@ class Smol_pellet(Pellet):
         self.kill()
 
 
-class Big_pellet(Pellet):
+class PowerPellet(Pellet):
     def __init__(self,image,pos,group,object_type):
         super().__init__(group)
 
         self.image = pg.image.load(image).convert_alpha()
-        
+
         self.rect = self.image.get_rect(topleft=pos)
 
         self.object_type = object_type
 
-    def powerUp(self):
-        pass
+    def powerUp(self,player):
+        player.PowerUp = True
+
 
     def eat(self):
-        self.powerUp()
+
         self.kill()
 
 

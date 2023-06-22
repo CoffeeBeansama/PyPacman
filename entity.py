@@ -33,6 +33,8 @@ class Entity(pg.sprite.Sprite):
         direction.y = value
         direction.x = 0
 
+
+
     def savePreviousDirection(self, direction):
         self.previous_direction.x = direction.x
         self.previous_direction.y = direction.y
@@ -54,45 +56,10 @@ class Entity(pg.sprite.Sprite):
 
 
 
-    def ScatterDirection(self,direction):
-
-        if self.NodeCollided():
-
-            randomDirection = random.randrange(len(self.node_object.availableDirections))
-            print(self.node_object.rect.x)
-            print(self.node_object.rect.y)
-
-            x = self.node_object.availableDirections[randomDirection][0]
-            y = self.node_object.availableDirections[randomDirection][1]
-            print(f"x is : {x}")
-            print(f"y is : {y}")
-            direction.x = x
-            direction.y = y
-
-    def ChaseDirection(self):
-
-            direction = pg.math.Vector2()
-            minDistance = sys.float_info.max
-
-            for directions in self.node_object.availableDirections:
-
-                newPosition = pg.math.Vector2(self.rect.center + pg.math.Vector2(directions[0],directions[1]))
-                distance = (self.player.rect.center - newPosition).magnitude_squared()
-
-                if distance < minDistance:
-
-                    direction.x = directions[0]
-
-                    direction.y = directions[1]
-
-
-                    minDistance = distance
-
-
-            self.setDirection(direction)
-
-
-
+    def CheckPortalCollision(self):
+        for sprite in self.portals:
+            if sprite.hitbox.center == self.hitbox.center:
+                self.hitbox.center = sprite.transport_pos
 
 
 

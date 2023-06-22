@@ -9,6 +9,7 @@ class Game:
 
         self.screen = pg.display.set_mode((WIDTH,HEIGHT))
 
+
         pg.display.set_caption("PyPacman")
         self.clock = pg.time.Clock()
         self.level = Level()
@@ -20,6 +21,11 @@ class Game:
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
+
+                if event.type == self.level.PowerUp:
+
+                    self.level.pacman.PowerUp = False
+
 
             self.screen.fill("black")
             self.level.run()

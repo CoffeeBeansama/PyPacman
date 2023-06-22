@@ -5,20 +5,16 @@ WIDTH,HEIGHT = (600,650)
 directions = ["Horizontal","Vertical"]
 direction_axis = [-1,1]
 
-blank = "Sprites/Blank.png"
-wall = "Sprites/Wall.png"
-smolpellet = "Sprites/smol pellet.png"
-bigpellet = "Sprites/big pellet.png"
-pacman = "Sprites/Pacman.png"
-node = "Sprites/node.png"
-blinky = "Sprites/Blinky.png"
-pinky = "Sprites/Pinky.png"
-inky = "Sprites/Inky.png"
-clyde = "Sprites/Clyde.png"
-gate = "Sprites/gate.png"
+
+Sprites =  {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPellet": "Sprites/smol pellet.png",
+            "PowerPellet": "Sprites/big pellet.png", "Node" : "Sprites/node.png","Pacman" : "Sprites/Pacman.png",
+            "Blinky": "Sprites/Blinky.png", "Pinky": "Sprites/Pinky.png", "Inky" : "Sprites/Inky.png",
+            "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png"
+            }
+
 
 ghost_speed = 0.9
-pacman_Speed = 1.2
+pacman_Speed = 2
 
 tilesize = 20
 FPS = 60
@@ -30,7 +26,7 @@ map = [
 ["B","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","W","B"],
 ["B","W","N","*","*","*","*","N","*","*","*","*","*","N","W","W","N","*","*","*","*","*","N","*","*","*","*","N","W","B"],
 ["B","W","*","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","*","W","B"],
-["B","W","b","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","b","W","B"],
+["B","W","PP","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","PP","W","B"],
 ["B","W","*","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","*","W","B"],
 ["B","W","N","*","*","*","*","N","*","*","N","*","*","N","*","*","N","*","*","N","*","*","N","*","*","*","*","N","W","B"],
 ["B","W","*","W","W","W","W","*","W","W","*","W","W","W","W","W","W","W","W","*","W","W","*","W","W","W","W","*","W","B"],
@@ -41,7 +37,7 @@ map = [
 ["B","B","B","B","B","B","W","*","W","W","N"," "," ","N","E","E","N"," "," ","N","W","W","*","W","B","B","B","B","B","B"],
 ["B","B","B","B","B","B","W","*","W","W"," ","W","W","W","G","G","W","W","W"," ","W","W","*","W","B","B","B","B","B","B"],
 ["B","W","W","W","W","W","W","*","W","W"," ","W","B","B","B","B","B","B","W"," ","W","W","*","W","W","W","W","W","W","B"],
-["B"," "," "," "," "," ","W","N","*"," ","N","W","B","B","B","B","B","B","W","N"," ","*","N","W"," "," "," "," "," ","B"],
+["B","PT"," "," "," "," "," ","N","*"," ","N","W","B","B","B","B","B","B","W","N"," ","*","N"," "," "," "," "," ","PT","B"],
 ["B","W","W","W","W","W","W","*","W","W"," ","W","B","B","B","B","B","B","W"," ","W","W","*","W","W","W","W","W","W","B"],
 ["B","B","B","B","B","B","W","*","W","W"," ","W","W","W","W","W","W","W","W"," ","W","W","*","W","B","B","B","B","B","B"],
 ["B","B","B","B","B","B","W","*","W","W","N"," "," "," "," "," "," "," "," ","N","W","W","*","W","B","B","B","B","B","B"],
@@ -49,7 +45,7 @@ map = [
 ["B","W","W","W","W","W","W","*","W","W","*","W","W","W","W","W","W","W","W","*","W","W","*","W","W","W","W","W","W","B"],
 ["B","W","N","*","*","*","*","N","*","*","N","*","*","N","W","W","N","*","*","N","*","*","N","*","*","*","*","N","W","B"],
 ["B","W","*","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","*","W","B"],
-["B","W","*","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","*","W","B"],
+["B","W","PP","W","W","W","W","*","W","W","W","W","W","*","W","W","*","W","W","W","W","W","*","W","W","W","W","PP","W","B"],
 ["B","W","N","*","N","W","W","N","*","*","N","*","*","N","*","*","N","*","*","N","*","*","N","W","W","N","*","N","W","B"],
 ["B","W","W","W","*","W","W","*","W","W","*","W","W","W","W","W","W","W","W","*","W","W","*","W","W","*","W","W","W","B"],
 ["B","W","W","W","*","W","W","*","W","W","*","W","W","W","W","W","W","W","W","*","W","W","*","W","W","*","W","W","W","B"],
