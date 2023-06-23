@@ -85,7 +85,6 @@ class Pacman(Entity):
                     self.setNextDirection(1, 0)
 
 
-
     def get_inputs(self):
 
         keys = pg.key.get_pressed()

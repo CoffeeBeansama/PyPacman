@@ -12,6 +12,7 @@ class States(Enum):
     Scatter = 2
     Chase = 3
     Frightened = 4
+    Eaten = 5
 
 
 class StateCache:
@@ -22,7 +23,8 @@ class StateCache:
             "Home" : HomeState(self,self.main),
             "Scatter" : ScatterState(self,self.main),
             "Chase" : ChaseState(self,self.main),
-            "Frightened": FrightenedState(self,self.main)
+            "Frightened": FrightenedState(self,self.main),
+            "Eaten" : EatenState(self,self.main)
         }
 
     def HomeState(self):
@@ -33,6 +35,8 @@ class StateCache:
         return self.states["Chase"]
     def FrightenedState(self):
         return self.states["Frightened"]
+    def EatenState(self):
+        return self.states["Eaten"]
 
 class BaseState(ABC):
 
@@ -55,7 +59,7 @@ class BaseState(ABC):
     def __init__(self,stateCache,main):
         self.stateCache = stateCache
         self.main = main
-
+        self.startTick = pg.time.get_ticks()
         self.HomeDuration = 0
 
     def SwitchState(self,newState):
@@ -73,7 +77,7 @@ class BaseState(ABC):
 class HomeState(BaseState):
 
     def EnterState(self):
-        self.main.rect.center = self.main.startingPos
+        self.main.hitbox.center = self.main.startingPos
     def CheckSwitchState(self):
 
         currentTime = pg.time.get_ticks()
@@ -102,10 +106,16 @@ class ScatterState(BaseState):
         self.CheckSwitchState()
 
         if self.main.NodeCollided():
+
             randomDirection = random.randrange(len(self.main.node_object.availableDirections))
 
             x = self.main.node_object.availableDirections[randomDirection][0]
             y = self.main.node_object.availableDirections[randomDirection][1]
+
+            if x == self.main.direction.x * -1:
+                x = self.main.direction.x
+            if y == self.main.direction.y * -1:
+                y = self.main.direction.y
 
             self.main.direction.x = x
             self.main.direction.y = y
@@ -135,6 +145,7 @@ class ChaseState(BaseState):
 
 
     def UpdateState(self):
+
             self.CheckSwitchState()
             direction = pg.math.Vector2()
             minDistance = sys.float_info.max
@@ -143,6 +154,8 @@ class ChaseState(BaseState):
 
                 newPosition = pg.math.Vector2(self.main.rect.center + pg.math.Vector2(directions[0], directions[1]))
                 distance = (self.main.player.rect.center - newPosition).magnitude_squared()
+
+
 
                 if distance < minDistance:
                     direction.x = directions[0]
@@ -171,6 +184,7 @@ class FrightenedState(BaseState):
 
 
     def UpdateState(self):
+
         self.CheckSwitchState()
 
         direction = pg.math.Vector2()
@@ -179,7 +193,7 @@ class FrightenedState(BaseState):
         for directions in self.main.node_object.availableDirections:
 
             newPosition = pg.math.Vector2(self.main.rect.center + pg.math.Vector2(directions[0], directions[1]))
-            distance = (self.main.player.rect.center - newPosition).magnitude_squared()
+            distance = (self.main.gatePos - newPosition).magnitude_squared()
 
             if distance > MaxDistance:
                 direction.x = directions[0]
@@ -199,6 +213,54 @@ class FrightenedState(BaseState):
     def ExitState(self):
         pass
 
+class EatenState(BaseState):
+
+    def EnterState(self):
+       pass
+
+
+
+    def UpdateState(self):
+
+        self.CheckSwitchState()
+        #self.main.rect.x = self.main.startingPos[0]
+        #self.main.rect.y = self.main.startingPos[1]
+
+        direction = pg.math.Vector2()
+        minDistance = sys.float_info.max
+
+        for directions in self.main.node_object.availableDirections:
+
+            newPosition = pg.math.Vector2(self.main.rect.center + pg.math.Vector2(directions[0], directions[1]))
+            distance = ((self.main.gatePos[0],self.main.gatePos[1]) - newPosition).magnitude_squared()
+
+
+
+            if distance < minDistance:
+
+                direction.x = directions[0]
+                direction.y = directions[1]
+
+                minDistance = distance
+
+        self.main.setDirection(direction)
+        self.main.movement(ghost_EatenSpeed)
+
+
+
+    def CheckSwitchState(self):
+
+        if self.main.rect.x == self.main.gatePos[0]:
+            print("this")
+            self.SwitchState(self.stateCache.ScatterState())
+
+
+
+
+
+    def ExitState(self):
+        pass
+
 
 class Blinky(Entity):
 
@@ -207,8 +269,8 @@ class Blinky(Entity):
 
         self.homeDuration = 1000
         self.ScatterDuration = 15000
-        self.startingPos = (290, 290)
-        self.gatePos = (290,250)
+        self.startingPos = (280,280)
+        self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.player = player
         self.collision_sprite = collidableSprite
@@ -239,9 +301,10 @@ class Pinky(Entity):
         super().__init__(group)
 
 
+
         self.homeDuration = 5000
         self.ScatterDuration = 16000
-        self.startingPos = (310, 290)
+        self.startingPos = (300,280)
         self.gatePos = (310, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -260,6 +323,7 @@ class Pinky(Entity):
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
 
+
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
@@ -272,7 +336,7 @@ class Inky(Entity):
 
         self.homeDuration = 9000
         self.ScatterDuration = 17000
-        self.startingPos = (290, 310)
+        self.startingPos = (280, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -291,6 +355,9 @@ class Inky(Entity):
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
 
+
+
+
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
@@ -303,7 +370,7 @@ class Clyde(Entity):
 
         self.homeDuration = 12000
         self.ScatterDuration = 18000
-        self.startingPos = (310, 310)
+        self.startingPos = (300, 300)
         self.gatePos = (310, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -322,6 +389,10 @@ class Clyde(Entity):
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
 
+
+
+
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
+
