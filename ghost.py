@@ -153,7 +153,7 @@ class ChaseState(BaseState):
             for directions in self.main.node_object.availableDirections:
 
                 newPosition = pg.math.Vector2(self.main.rect.center + pg.math.Vector2(directions[0], directions[1]))
-                distance = (self.main.player.rect.center - newPosition).magnitude_squared()
+                distance = (self.main.TargetTile() - newPosition).magnitude_squared()
 
 
 
@@ -288,7 +288,8 @@ class Blinky(Entity):
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
 
-
+    def TargetTile(self):
+        return self.player.rect.center
 
     def update(self):
         self.CheckPortalCollision()
@@ -323,7 +324,21 @@ class Pinky(Entity):
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
 
+    def TargetTile(self):
+        if self.player.current_direction == "Up":
+            x = self.player.rect.centerx
+            y = self.player.rect.centery - 80
+        elif self.player.current_direction == "Down":
+            x = self.player.rect.centerx
+            y = self.player.rect.centery + 80
+        elif self.player.current_direction == "Left":
+            x = self.player.rect.centerx - 80
+            y = self.player.rect.centery
+        elif self.player.current_direction == "Right":
+            x = self.player.rect.centerx + 80
+            y = self.player.rect.centery
 
+        return (x,y)
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
@@ -356,7 +371,8 @@ class Inky(Entity):
         self.currentState.EnterState()
 
 
-
+    def TargetTile(self):
+        return self.player.rect.center
 
     def update(self):
         self.CheckPortalCollision()
@@ -390,7 +406,8 @@ class Clyde(Entity):
         self.currentState.EnterState()
 
 
-
+    def TargetTile(self):
+        return self.player.rect.center
 
     def update(self):
         self.CheckPortalCollision()

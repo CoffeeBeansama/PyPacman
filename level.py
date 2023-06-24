@@ -118,6 +118,7 @@ class Level:
         self.inky = Inky(Sprites["Inky"], self.inky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
         self.clyde = Clyde(Sprites["Clyde"], self.clyde_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
 
+
     def GameOver(self):
         allPelletsConsumed = len(self.eatable_sprites) - self.ghostNumber <= 0
 
