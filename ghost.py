@@ -251,7 +251,7 @@ class EatenState(BaseState):
     def CheckSwitchState(self):
 
         if self.main.rect.x == self.main.gatePos[0]:
-            print("this")
+
             self.SwitchState(self.stateCache.ScatterState())
 
 
@@ -289,6 +289,9 @@ class Blinky(Entity):
         self.currentState.EnterState()
 
     def TargetTile(self):
+
+        print(f"blinky x  :{self.player.rect.centerx}")
+        print(f"blinky y  :{self.player.rect.centery}")
         return self.player.rect.center
 
     def update(self):
@@ -325,20 +328,27 @@ class Pinky(Entity):
         self.currentState.EnterState()
 
     def TargetTile(self):
-        if self.player.current_direction == "Up":
-            x = self.player.rect.centerx
-            y = self.player.rect.centery - 80
-        elif self.player.current_direction == "Down":
-            x = self.player.rect.centerx
-            y = self.player.rect.centery + 80
-        elif self.player.current_direction == "Left":
-            x = self.player.rect.centerx - 80
-            y = self.player.rect.centery
-        elif self.player.current_direction == "Right":
-            x = self.player.rect.centerx + 80
-            y = self.player.rect.centery
+
+        playerDirection = self.player.current_direction
+        playerX = self.player.rect.centerx
+        playerY = self.player.rect.centery
+
+
+        if playerDirection == "Up":
+            x = playerX
+            y = playerY - 80
+        elif playerDirection == "Down":
+            x = playerX
+            y = playerY + 80
+        elif playerDirection == "Left":
+            x = playerX - 80
+            y = playerY
+        elif playerDirection == "Right":
+            x = playerX + 80
+            y = playerY
 
         return (x,y)
+    
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
@@ -406,8 +416,26 @@ class Clyde(Entity):
         self.currentState.EnterState()
 
 
+
+        self.allowedDistanceToPacman = 160
+
+
     def TargetTile(self):
-        return self.player.rect.center
+        x_hometile = 10
+        y_hometile = 610
+
+        currentPos = pg.math.Vector2(self.rect.center)
+        playerPos = pg.math.Vector2(self.player.rect.center)
+
+        distanceToPlayer = (playerPos - currentPos).magnitude()
+
+        if distanceToPlayer <= self.allowedDistanceToPacman:
+
+            return x_hometile,y_hometile
+
+        else:
+
+            return self.player.rect.center
 
     def update(self):
         self.CheckPortalCollision()
