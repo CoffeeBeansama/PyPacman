@@ -23,66 +23,45 @@ class Pacman(Entity):
         self.HorizontalMovement(self.direction, -1)
 
 
-
-
-
     def setDirection(self,direction):
 
         if self.current_direction == "Up":
             self.savePreviousDirection(direction)
 
             if self.previous_direction.y == 1:
-                self.VerticalMovement(direction, -1)
+                direction.y = direction.y * -1
             else:
-                if not self.NodeCollided():
-                    direction.x = self.previous_direction.x
-                    direction.y = self.previous_direction.y
-
-                else:
+                if self.NodeCollided():
                     self.VerticalMovement(direction, -1)
-                    self.setNextDirection(0, -1)
+                    self.setNextDirection(self.Direction["Up"])
 
         elif self.current_direction == "Down":
             self.savePreviousDirection(direction)
             if self.previous_direction.y == -1:
-                self.VerticalMovement(direction, 1)
+                direction.y = direction.y * -1
             else:
-                if not self.NodeCollided():
-                    direction.x = self.previous_direction.x
-                    direction.y = self.previous_direction.y
-
-                else:
+                if self.NodeCollided():
                     self.VerticalMovement(direction, 1)
-                    self.setNextDirection(0, 1)
+                    self.setNextDirection(self.Direction["Down"])
 
         elif self.current_direction == "Left":
             self.savePreviousDirection(direction)
             if self.previous_direction.x == 1:
-                self.HorizontalMovement(direction, -1)
+                direction.x = direction.x * -1
             else:
 
-                if not self.NodeCollided():
-                    direction.x = self.previous_direction.x
-                    direction.y = self.previous_direction.y
-
-                else:
+                if self.NodeCollided():
                     self.HorizontalMovement(direction, -1)
-                    self.setNextDirection(-1, 0)
+                    self.setNextDirection(self.Direction["Left"])
 
         elif self.current_direction == "Right":
 
             self.savePreviousDirection(direction)
             if self.previous_direction.x == -1:
-                self.HorizontalMovement(direction, 1)
+                direction.x = direction.x * -1
             else:
-                if not self.NodeCollided():
-
-                    direction.x = self.previous_direction.x
-                    direction.y = self.previous_direction.y
-
-                else:
+                if self.NodeCollided():
                     self.HorizontalMovement(direction, 1)
-                    self.setNextDirection(1, 0)
 
 
     def get_inputs(self):

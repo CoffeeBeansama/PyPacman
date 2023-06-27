@@ -1,3 +1,4 @@
+import math
 import random
 import sys
 from abc import ABC, abstractmethod
@@ -130,8 +131,8 @@ class ScatterState(BaseState):
 
         currentTime = pg.time.get_ticks()
 
-        if currentTime - 0 >= self.main.ScatterDuration:
-            self.SwitchState(self.stateCache.ChaseState())
+        #if currentTime - 0 >= self.main.ScatterDuration:
+        self.SwitchState(self.stateCache.ChaseState())
 
 
     def ExitState(self):
@@ -147,6 +148,7 @@ class ChaseState(BaseState):
     def UpdateState(self):
 
             self.CheckSwitchState()
+
             direction = pg.math.Vector2()
             minDistance = sys.float_info.max
 
@@ -277,7 +279,7 @@ class Blinky(Entity):
         self.nodes = node_sprite
         self.node_object = node_object
 
-
+        self.color = (255,0,0)
 
         self.image = pg.image.load(image).convert_alpha()
         self.rect = self.image.get_rect(topleft=pos)
@@ -290,8 +292,7 @@ class Blinky(Entity):
 
     def TargetTile(self):
 
-        print(f"blinky x  :{self.player.rect.centerx}")
-        print(f"blinky y  :{self.player.rect.centery}")
+
         return self.player.rect.center
 
     def update(self):
@@ -314,6 +315,8 @@ class Pinky(Entity):
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
         self.node_object = node_object
+
+        self.color = (255,192,203)
 
         self.player = player
         self.currentDirection = "Horizontal"
@@ -348,7 +351,7 @@ class Pinky(Entity):
             y = playerY
 
         return (x,y)
-    
+
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
@@ -356,7 +359,7 @@ class Pinky(Entity):
 
 class Inky(Entity):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky):
         super().__init__(group)
 
         self.homeDuration = 9000
@@ -367,8 +370,10 @@ class Inky(Entity):
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
         self.node_object = node_object
-        self.player = player
 
+        self.color = (224,255,255)
+        self.player = player
+        self.blinky = blinky
         self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
@@ -382,7 +387,38 @@ class Inky(Entity):
 
 
     def TargetTile(self):
-        return self.player.rect.center
+
+        playerDirection = self.player.current_direction
+        playerX = self.player.rect.centerx
+        playerY = self.player.rect.centery
+
+        blinkyX = self.blinky.rect.centerx
+        blinkyY = self.blinky.rect.centery
+
+        if playerDirection == "Up":
+            targetX = playerX
+            targetY = (playerY - 40)
+        elif playerDirection == "Down":
+            targetX = playerX
+            targetY = (playerY + 40)
+        elif playerDirection == "Left":
+            targetX = (playerX - 40)
+            targetY = playerY
+        elif playerDirection == "Right":
+            targetX = (playerX + 40)
+            targetY = playerY
+
+        buffX = targetX - blinkyX
+        buffY = targetY - blinkyY
+
+        tilex = targetX - buffX
+        tiley = targetY - buffY
+
+        targetTileX = (tilex * math.cos(0) - tiley * math.sin(0)) + (buffX * 1.8)
+        targetTileY = (tilex * math.sin(0) + tiley * math.cos(0)) + (buffY * 1.8)
+
+
+        return (targetTileX,targetTileY)
 
     def update(self):
         self.CheckPortalCollision()
@@ -403,6 +439,9 @@ class Clyde(Entity):
         self.nodes = node_sprite
         self.node_object = node_object
         self.player = player
+
+
+        self.color = (245,222,179)
 
         self.currentDirection = "Horizontal"
 

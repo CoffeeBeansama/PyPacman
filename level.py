@@ -53,12 +53,13 @@ class Level:
                         if target_sprite.object_type == "Ghost":
 
                             if self.pacman.PowerUp:
-
-                                target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
+                                pass
+                                #target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
 
                             else:
-                                self.pacmanEaten = True
-                                self.pacman.kill()
+                                pass
+                                #self.pacmanEaten = True
+                                #self.pacman.kill()
 
     def createMap(self):
 
@@ -115,7 +116,7 @@ class Level:
 
         self.blinky = Blinky(Sprites["Blinky"], self.blinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
         self.pinky = Pinky(Sprites["Pinky"], self.pinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
-        self.inky = Inky(Sprites["Inky"], self.inky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
+        self.inky = Inky(Sprites["Inky"], self.inky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self.blinky)
         self.clyde = Clyde(Sprites["Clyde"], self.clyde_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
 
 
@@ -143,9 +144,9 @@ class Level:
 
         if not self.GameOver():
             self.blinky.update()
-            self.pinky.update()
+            #self.pinky.update()
             self.inky.update()
-            self.clyde.update()
+            #self.clyde.update()
 
         self.pacman.update()
 

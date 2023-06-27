@@ -15,7 +15,7 @@ Sprites =  {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPe
 
 ghost_speed = 0.9
 ghost_EatenSpeed = 2
-pacman_Speed = 1.5
+pacman_Speed = 1.2
 
 tilesize = 20
 FPS = 60

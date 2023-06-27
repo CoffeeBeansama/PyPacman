@@ -7,11 +7,14 @@ class Entity(pg.sprite.Sprite):
     def __init__(self,groups):
         super().__init__(groups)
 
+        self.screen = pg.display.get_surface()
         self.direction = pg.math.Vector2()
         self.next_direction = pg.math.Vector2()
         self.previous_direction = pg.math.Vector2()
 
-
+        self.Direction = {"Up": (0,-1), "Down": (0,1),
+                          "Left": (-1,0), "Right": (1,0)
+                          }
 
         self.wallCollided = False
 
@@ -39,9 +42,8 @@ class Entity(pg.sprite.Sprite):
         self.previous_direction.x = direction.x
         self.previous_direction.y = direction.y
 
-    def setNextDirection(self, value1, value2):
-        self.next_direction.x = value1
-        self.next_direction.y = value2
+    def setNextDirection(self, nextDirection):
+        self.next_directioyy = nextDirection
 
     def NodeCollided(self):
 
