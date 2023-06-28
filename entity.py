@@ -2,6 +2,7 @@ import random
 import sys
 import pygame as pg
 from settings import *
+from abc import abstractmethod
 
 class Entity(pg.sprite.Sprite):
     def __init__(self,groups):
@@ -12,6 +13,13 @@ class Entity(pg.sprite.Sprite):
         self.next_direction = pg.math.Vector2()
         self.previous_direction = pg.math.Vector2()
 
+
+
+        self.frame_index = 0
+        self.animation_time = 1 / 4
+
+        self.spriteDirection = "Up"
+
         self.Direction = {"Up": (0,-1), "Down": (0,1),
                           "Left": (-1,0), "Right": (1,0)
                           }
@@ -19,6 +27,12 @@ class Entity(pg.sprite.Sprite):
         self.wallCollided = False
 
 
+    @abstractmethod
+    def importSprites(self):
+        pass
+
+    def animate(self):
+        pass
 
     def movement(self,speed):
 

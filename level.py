@@ -20,10 +20,10 @@ class Level:
         self.pacman_Sprite = pg.sprite.Group()
 
         self.ghostNumber = 4
-        self.blinky_pos = (280,280)
-        self.pinky_pos = (300,280)
-        self.inky_pos = (280, 300)
-        self.clyde_pos = (300, 300)
+        self.blinky_pos = (280,300)
+        self.pinky_pos = (300,300)
+        self.inky_pos = (280, 320)
+        self.clyde_pos = (300, 320)
         self.createMap()
 
         self.PowerUp = pg.USEREVENT

@@ -6,6 +6,7 @@ import pygame as pg
 from entity import Entity
 from enum import Enum
 from settings import *
+from support import import_folder
 
 
 class States(Enum):
@@ -153,7 +154,7 @@ class ChaseState(BaseState):
             minDistance = sys.float_info.max
 
             #for debugging
-            pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),5)
+            #pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),5)
 
             for directions in self.main.node_object.availableDirections:
 
@@ -258,14 +259,50 @@ class EatenState(BaseState):
         pass
 
 
-class Blinky(Entity):
+class Ghosts(Entity):
+
+    def importSprites(self):
+        path = f"Sprites/Ghosts/Body/"
+
+        self.animations = {'Up': [], 'Down': [], 'Left': [], 'Right': [],
+                           f"{self.name}": []
+                           }
+
+        for animation in self.animations.keys():
+            full_path = path + animation
+            self.animations[animation] = import_folder(full_path)
+
+
+
+    def animate(self):
+        animation = self.animations[self.name]
+        self.frame_index += self.animation_time
+
+        if self.frame_index >= len(animation):
+            self.frame_index = 0
+
+        self.image = animation[int(self.frame_index)]
+        self.rect = self.image.get_rect(center=self.rect.center)
+    def getSpriteDirection(self):
+        if self.direction.y == -1:
+            self.spriteDirection = "Up"
+        elif self.direction.y == 1:
+            self.spriteDirection = "Down"
+        elif self.direction.x == -1:
+            self.spriteDirection = "Left"
+        elif self.direction.x == 1:
+            self.spriteDirection = "Right"
+
+class Blinky(Ghosts):
 
     def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
         super().__init__(group)
 
+        self.name = "Blinky"
+
         self.homeDuration = 1000
         self.ScatterDuration = 15000
-        self.startingPos = (280,280)
+        self.startingPos = (280,300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.player = player
@@ -273,56 +310,67 @@ class Blinky(Entity):
         self.nodes = node_sprite
         self.node_object = node_object
 
+
+
         self.color = (255,0,0)
 
         self.image = pg.image.load(image).convert_alpha()
+
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
+
         self.object_type = object_type
+
+        self.importSprites()
 
         self.stateCache = StateCache(self)
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
 
     def TargetTile(self):
-
-
         return self.player.rect.center
 
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
+        self.getSpriteDirection()
+        self.animate()
 
 
-class Pinky(Entity):
+class Pinky(Ghosts):
 
     def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
         super().__init__(group)
 
-
+        self.name = "Pinky"
 
         self.homeDuration = 5000
         self.ScatterDuration = 16000
-        self.startingPos = (300,280)
-        self.gatePos = (310, 250)
+        self.startingPos = (300,300)
+        self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
         self.node_object = node_object
 
-        self.color = (255,192,203)
+        self.color = (255, 80, 255)
 
         self.player = player
         self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
+
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
+
         self.object_type = object_type
+
+        self.importSprites()
 
         self.stateCache = StateCache(self)
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
+
 
     def TargetTile(self):
 
@@ -349,16 +397,20 @@ class Pinky(Entity):
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
+        self.getSpriteDirection()
+        self.animate()
 
 
-class Inky(Entity):
+class Inky(Ghosts):
 
     def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky):
         super().__init__(group)
 
+        self.name = "Inky"
+
         self.homeDuration = 9000
         self.ScatterDuration = 17000
-        self.startingPos = (280, 300)
+        self.startingPos = (280, 320)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -371,14 +423,16 @@ class Inky(Entity):
         self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
+
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
+        self.importSprites()
+
         self.stateCache = StateCache(self)
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
-
 
     def TargetTile(self):
 
@@ -412,24 +466,25 @@ class Inky(Entity):
         targetTileX = (tilex * math.cos(0) - tiley * math.sin(0)) + (buffX * 2)
         targetTileY = (tilex * math.sin(0) + tiley * math.cos(0)) + (buffY * 2)
 
-
-
-        return (targetTileX,targetTileY)
+        return targetTileX,targetTileY
 
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
+        self.getSpriteDirection()
+        self.animate()
 
 
-class Clyde(Entity):
+class Clyde(Ghosts):
 
     def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
         super().__init__(group)
 
+        self.name = "Clyde"
         self.homeDuration = 12000
         self.ScatterDuration = 18000
-        self.startingPos = (300, 300)
-        self.gatePos = (310, 250)
+        self.startingPos = (300, 320)
+        self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
@@ -437,20 +492,21 @@ class Clyde(Entity):
         self.player = player
 
 
-        self.color = (245,222,179)
+        self.color =(255,190,190)
 
         self.currentDirection = "Horizontal"
 
         self.image = pg.image.load(image).convert_alpha()
+
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
+
         self.object_type = object_type
 
+        self.importSprites()
         self.stateCache = StateCache(self)
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
-
-
 
         self.allowedDistanceToPacman = 160
 
@@ -475,4 +531,6 @@ class Clyde(Entity):
     def update(self):
         self.CheckPortalCollision()
         self.currentState.UpdateState()
+        self.getSpriteDirection()
+        self.animate()
 
