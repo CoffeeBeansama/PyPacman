@@ -265,7 +265,7 @@ class Ghosts(Entity):
         path = f"Sprites/Ghosts/Body/"
 
         self.animations = {'Up': [], 'Down': [], 'Left': [], 'Right': [],
-                           f"{self.name}": []
+                           f"{self.name}": [], "Frightened": []
                            }
 
         for animation in self.animations.keys():
@@ -275,7 +275,7 @@ class Ghosts(Entity):
 
 
     def animate(self):
-        animation = self.animations[self.name]
+        animation = self.animations[self.name] if self.currentState != self.stateCache.FrightenedState() else self.animations["Frightened"]
         self.frame_index += self.animation_time
 
         if self.frame_index >= len(animation):
