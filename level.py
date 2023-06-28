@@ -54,12 +54,12 @@ class Level:
 
                             if self.pacman.PowerUp:
                                 pass
-                                #target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
+                                target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
 
                             else:
                                 pass
-                                #self.pacmanEaten = True
-                                #self.pacman.kill()
+                                self.pacmanEaten = True
+                                self.pacman.kill()
 
     def createMap(self):
 
@@ -144,9 +144,9 @@ class Level:
 
         if not self.GameOver():
             self.blinky.update()
-            #self.pinky.update()
+            self.pinky.update()
             self.inky.update()
-            #self.clyde.update()
+            self.clyde.update()
 
         self.pacman.update()
 

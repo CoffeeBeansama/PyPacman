@@ -131,8 +131,8 @@ class ScatterState(BaseState):
 
         currentTime = pg.time.get_ticks()
 
-        #if currentTime - 0 >= self.main.ScatterDuration:
-        self.SwitchState(self.stateCache.ChaseState())
+        if currentTime - 0 >= self.main.ScatterDuration:
+            self.SwitchState(self.stateCache.ChaseState())
 
 
     def ExitState(self):
@@ -151,6 +151,9 @@ class ChaseState(BaseState):
 
             direction = pg.math.Vector2()
             minDistance = sys.float_info.max
+
+
+            pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
 
             for directions in self.main.node_object.availableDirections:
 
@@ -413,6 +416,7 @@ class Inky(Entity):
 
         tilex = targetX - buffX
         tiley = targetY - buffY
+
 
         targetTileX = (tilex * math.cos(0) - tiley * math.sin(0)) + (buffX * 1.8)
         targetTileY = (tilex * math.sin(0) + tiley * math.cos(0)) + (buffY * 1.8)

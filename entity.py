@@ -80,7 +80,6 @@ class Entity(pg.sprite.Sprite):
                     if self.direction.x > 0:  # moving right
                         self.hitbox.right = sprite.hitbox.left
 
-
                     if self.direction.x < 0:  # moving left
                         self.hitbox.left = sprite.hitbox.right
 
