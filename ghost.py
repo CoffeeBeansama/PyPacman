@@ -108,18 +108,18 @@ class ScatterState(BaseState):
 
         if self.main.NodeCollided():
 
-            randomDirection = random.randrange(len(self.main.node_object.availableDirections))
+            index = random.randrange(0,len(self.main.node_object.availableDirections))
 
-            x = self.main.node_object.availableDirections[randomDirection][0]
-            y = self.main.node_object.availableDirections[randomDirection][1]
+            goingBack = self.main.node_object.availableDirections[index] == -self.main.direction
 
-            if x == self.main.direction.x * -1:
-                x = self.main.direction.x
-            if y == self.main.direction.y * -1:
-                y = self.main.direction.y
+            if goingBack:
 
-            self.main.direction.x = x
-            self.main.direction.y = y
+                index += 1
+                if index >= len(self.main.node_object.availableDirections):
+                    index = 0
+
+                self.main.direction.x = self.main.node_object.availableDirections[index][0]
+                self.main.direction.y = self.main.node_object.availableDirections[index][1]
 
         self.main.movement(ghost_speed)
 
@@ -152,15 +152,13 @@ class ChaseState(BaseState):
             direction = pg.math.Vector2()
             minDistance = sys.float_info.max
 
-
-            pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
+            #for debugging
+            pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),5)
 
             for directions in self.main.node_object.availableDirections:
 
                 newPosition = pg.math.Vector2(self.main.rect.center + pg.math.Vector2(directions[0], directions[1]))
                 distance = (self.main.TargetTile() - newPosition).magnitude_squared()
-
-
 
                 if distance < minDistance:
                     direction.x = directions[0]
@@ -228,8 +226,6 @@ class EatenState(BaseState):
     def UpdateState(self):
 
         self.CheckSwitchState()
-        #self.main.rect.x = self.main.startingPos[0]
-        #self.main.rect.y = self.main.startingPos[1]
 
         direction = pg.math.Vector2()
         minDistance = sys.float_info.max
@@ -238,8 +234,6 @@ class EatenState(BaseState):
 
             newPosition = pg.math.Vector2(self.main.rect.center + pg.math.Vector2(directions[0], directions[1]))
             distance = ((self.main.gatePos[0],self.main.gatePos[1]) - newPosition).magnitude_squared()
-
-
 
             if distance < minDistance:
 
@@ -258,9 +252,6 @@ class EatenState(BaseState):
         if self.main.rect.x == self.main.gatePos[0]:
 
             self.SwitchState(self.stateCache.ScatterState())
-
-
-
 
 
     def ExitState(self):
@@ -418,8 +409,9 @@ class Inky(Entity):
         tiley = targetY - buffY
 
 
-        targetTileX = (tilex * math.cos(0) - tiley * math.sin(0)) + (buffX * 1.8)
-        targetTileY = (tilex * math.sin(0) + tiley * math.cos(0)) + (buffY * 1.8)
+        targetTileX = (tilex * math.cos(0) - tiley * math.sin(0)) + (buffX * 2)
+        targetTileY = (tilex * math.sin(0) + tiley * math.cos(0)) + (buffY * 2)
+
 
 
         return (targetTileX,targetTileY)

@@ -58,8 +58,8 @@ class Level:
 
                             else:
                                 pass
-                                self.pacmanEaten = True
-                                self.pacman.kill()
+                                #self.pacmanEaten = True
+                                #self.pacman.kill()
 
     def createMap(self):
 
