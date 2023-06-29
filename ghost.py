@@ -222,8 +222,6 @@ class EatenState(BaseState):
     def EnterState(self):
        pass
 
-
-
     def UpdateState(self):
 
         self.CheckSwitchState()
@@ -261,21 +259,26 @@ class EatenState(BaseState):
 
 class Ghosts(Entity):
 
+
     def importSprites(self):
         path = f"Sprites/Ghosts/Body/"
 
-        self.animations = {'Up': [], 'Down': [], 'Left': [], 'Right': [],
-                           f"{self.name}": [], "Frightened": []
+        self.animations = {f"{self.name}": [], "Frightened": [],
+                           "Up": [], "Down": [], "Left": [], "Right": []
                            }
 
         for animation in self.animations.keys():
             full_path = path + animation
             self.animations[animation] = import_folder(full_path)
 
+    def animateEyes(self):
+        eye = self.animations[self.spriteDirection][0]
+        return self.screen.blit(eye, (self.rect.x, self.rect.y))
 
 
     def animate(self):
         animation = self.animations[self.name] if self.currentState != self.stateCache.FrightenedState() else self.animations["Frightened"]
+
         self.frame_index += self.animation_time
 
         if self.frame_index >= len(animation):
@@ -283,6 +286,11 @@ class Ghosts(Entity):
 
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.rect.center)
+        self.animateEyes()
+
+
+
+
     def getSpriteDirection(self):
         if self.direction.y == -1:
             self.spriteDirection = "Up"
@@ -292,6 +300,7 @@ class Ghosts(Entity):
             self.spriteDirection = "Left"
         elif self.direction.x == 1:
             self.spriteDirection = "Right"
+
 
 class Blinky(Ghosts):
 
@@ -310,18 +319,21 @@ class Blinky(Ghosts):
         self.nodes = node_sprite
         self.node_object = node_object
 
-
-
         self.color = (255,0,0)
+
+        self.eye = pg.image.load("Sprites/Ghosts/Body/Up/1.png")
 
         self.image = pg.image.load(image).convert_alpha()
 
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
 
+
+
         self.object_type = object_type
 
         self.importSprites()
+
 
         self.stateCache = StateCache(self)
         self.currentState = self.stateCache.HomeState()
@@ -331,10 +343,12 @@ class Blinky(Ghosts):
         return self.player.rect.center
 
     def update(self):
+
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
         self.animate()
+
 
 
 class Pinky(Ghosts):
@@ -395,6 +409,7 @@ class Pinky(Ghosts):
         return (x,y)
 
     def update(self):
+
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -469,6 +484,7 @@ class Inky(Ghosts):
         return targetTileX,targetTileY
 
     def update(self):
+
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -529,6 +545,7 @@ class Clyde(Ghosts):
             return self.player.rect.center
 
     def update(self):
+
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
