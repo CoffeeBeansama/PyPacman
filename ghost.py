@@ -220,7 +220,7 @@ class FrightenedState(BaseState):
 class EatenState(BaseState):
 
     def EnterState(self):
-       pass
+       pg.mixer.Sound.play(self.main.GhostEatenSound)
 
     def UpdateState(self):
 
@@ -259,7 +259,10 @@ class EatenState(BaseState):
 
 class Ghosts(Entity):
 
+    def __init__(self,group):
+        super().__init__(group)
 
+        self.GhostEatenSound = mixer.Sound(Sounds["GhostEaten"])
     def importSprites(self):
         path = f"Sprites/Ghosts/Body/"
 
@@ -286,9 +289,9 @@ class Ghosts(Entity):
 
         self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.rect.center)
-        self.animateEyes()
 
-
+        if self.currentState != self.stateCache.FrightenedState():
+            self.animateEyes()
 
 
     def getSpriteDirection(self):
@@ -336,7 +339,7 @@ class Blinky(Ghosts):
 
 
         self.stateCache = StateCache(self)
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.ScatterState()
         self.currentState.EnterState()
 
     def TargetTile(self):
@@ -360,7 +363,7 @@ class Pinky(Ghosts):
 
         self.homeDuration = 5000
         self.ScatterDuration = 16000
-        self.startingPos = (300,300)
+        self.startingPos = (280, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -425,7 +428,7 @@ class Inky(Ghosts):
 
         self.homeDuration = 9000
         self.ScatterDuration = 17000
-        self.startingPos = (280, 320)
+        self.startingPos = (260, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -499,7 +502,7 @@ class Clyde(Ghosts):
         self.name = "Clyde"
         self.homeDuration = 12000
         self.ScatterDuration = 18000
-        self.startingPos = (300, 320)
+        self.startingPos = (300, 280)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite

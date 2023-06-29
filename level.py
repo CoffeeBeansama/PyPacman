@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame import mixer
 from tile import Tile
 from settings import *
 from Pacman import Pacman
@@ -21,14 +22,39 @@ class Level:
 
         self.ghostNumber = 4
         self.blinky_pos = (280,300)
-        self.pinky_pos = (300,300)
-        self.inky_pos = (280, 320)
-        self.clyde_pos = (300, 320)
+        self.pinky_pos = (280,300)
+        self.inky_pos = (260, 300)
+        self.clyde_pos = (300, 300)
         self.createMap()
 
         self.PowerUp = pg.USEREVENT
 
         self.pacmanEaten = False
+
+        self.pelletSoundIndex = 0
+
+        self.pelletSound1 = mixer.Sound(Sounds["Pellet1"])
+        self.pelletSound2 = mixer.Sound(Sounds["Pellet2"])
+
+        mixer.music.load(Sounds["BGM"])
+        mixer.music.set_volume(0.08)
+        mixer.music.play(-1)
+
+
+
+    def PlaySFX(self,object):
+
+        if object == "Pellet":
+            sfx = [self.pelletSound1,self.pelletSound2]
+            self.pelletSoundIndex += 1
+
+            if self.pelletSoundIndex >= len(sfx):
+                self.pelletSoundIndex = 0
+
+            pg.mixer.Sound.play(sfx[self.pelletSoundIndex])
+
+        if object == "PowerPellet":
+            pass
 
     def PacmanCollisionLogic(self):
 
@@ -42,10 +68,13 @@ class Level:
                     for target_sprite in collisionSprite:
                         if target_sprite.object_type == "pellet":
 
+                            self.PlaySFX("Pellet")
                             target_sprite.eat()
+
 
                         if target_sprite.object_type == "PowerPellet":
 
+                            self.PlaySFX("PowerPellet")
                             target_sprite.powerUp(self.pacman)
                             pg.time.set_timer(self.PowerUp,12000)
                             target_sprite.eat()
@@ -53,13 +82,18 @@ class Level:
                         if target_sprite.object_type == "Ghost":
 
                             if self.pacman.PowerUp:
-                                pass
-                                target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
+
+                                notOnEatenState = target_sprite.currentState != target_sprite.stateCache.EatenState()
+                                if notOnEatenState:
+                                    target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
 
                             else:
                                 pass
-                                #self.pacmanEaten = True
-                                #self.pacman.kill()
+                                # self.pacmanEaten = True
+                                # self.pacman.kill()
+
+
+
 
     def createMap(self):
 

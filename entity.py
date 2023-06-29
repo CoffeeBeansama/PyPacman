@@ -16,7 +16,7 @@ class Entity(pg.sprite.Sprite):
 
 
         self.frame_index = 0
-        self.animation_time = 1 / 4
+        self.animation_time = 1 / 6
 
         self.spriteDirection = "Up"
 

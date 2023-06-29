@@ -23,7 +23,9 @@ class Smol_pellet(Pellet):
         self.object_type = object_type
 
 
+
     def eat(self):
+
         self.kill()
 
 

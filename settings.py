@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame import mixer
 
 WIDTH,HEIGHT = (580,650)
 
@@ -12,6 +13,9 @@ Sprites =  {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPe
             "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png"
             }
 
+Sounds = { "Pellet1" : "Sounds/1.mp3", "Pellet2" : "Sounds/2.mp3","PowerPellet": "Sounds/Power Pellet.mp3",
+            "GhostEaten": "Sounds/Ghost Eat.wav","BGM" : "Sounds/Siren.mp3"
+}
 
 ghost_speed = 0.9
 ghost_EatenSpeed = 2
@@ -19,6 +23,8 @@ pacman_Speed = 1.2
 
 tilesize = 20
 FPS = 60
+
+
 
 # * => small pellet, b => big pellet, P => Pacman, W => Wall, G1 => Blinky, G2 => Pinky, G3 => Inky, G4 => Clyde, E=> Exit
 
