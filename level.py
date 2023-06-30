@@ -20,6 +20,7 @@ class Level:
         self.nodes_sprites = pg.sprite.Group()
         self.pacman_Sprite = pg.sprite.Group()
 
+        self.startLevel = False
         self.ghostNumber = 4
         self.blinky_pos = (280,300)
         self.pinky_pos = (280,300)
@@ -31,6 +32,7 @@ class Level:
 
         self.pacmanEaten = False
 
+        self.title = pg.transform.scale(pg.image.load(Sprites["Title"]),(350,80))
         self.pelletSoundIndex = 0
 
         self.pelletSound1 = mixer.Sound(Sounds["Pellet1"])
@@ -170,19 +172,23 @@ class Level:
         direction.y = y
 
         return round(direction.x),round(direction.y)
-
     def run(self):
-        self.visible_sprites.draw(self.screen)
 
-        self.PacmanCollisionLogic()
+        if self.startLevel:
+            self.visible_sprites.draw(self.screen)
 
-        if not self.GameOver():
-            self.blinky.update()
-            self.pinky.update()
-            self.inky.update()
-            self.clyde.update()
+            self.PacmanCollisionLogic()
 
-        self.pacman.update()
+            if not self.GameOver():
+                self.blinky.update()
+                self.pinky.update()
+                self.inky.update()
+                self.clyde.update()
+
+            self.pacman.update()
+        else:
+            title = self.screen.blit(self.title,(110,60))
+
 
 
 

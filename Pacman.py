@@ -49,7 +49,7 @@ class Pacman(Entity):
             else:
                 if self.NodeCollided():
                     self.VerticalMovement(direction, -1)
-                    self.setNextDirection(self.Direction["Up"])
+
 
         elif self.current_direction == "Down":
             self.savePreviousDirection(direction)
@@ -58,7 +58,6 @@ class Pacman(Entity):
             else:
                 if self.NodeCollided():
                     self.VerticalMovement(direction, 1)
-                    self.setNextDirection(self.Direction["Down"])
 
         elif self.current_direction == "Left":
             self.savePreviousDirection(direction)
@@ -68,7 +67,7 @@ class Pacman(Entity):
 
                 if self.NodeCollided():
                     self.HorizontalMovement(direction, -1)
-                    self.setNextDirection(self.Direction["Left"])
+
 
         elif self.current_direction == "Right":
 

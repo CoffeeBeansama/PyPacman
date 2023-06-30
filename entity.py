@@ -69,16 +69,10 @@ class Entity(pg.sprite.Sprite):
 
         return False
 
-
-
-
     def CheckPortalCollision(self):
         for sprite in self.portals:
             if sprite.hitbox.center == self.hitbox.center:
                 self.hitbox.center = sprite.transport_pos
-
-
-
 
     def setDirection(self,direction):
         if self.NodeCollided():
