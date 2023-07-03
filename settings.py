@@ -10,7 +10,9 @@ direction_axis = [-1,1]
 Sprites = {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPellet": "Sprites/smol pellet.png",
             "PowerPellet": "Sprites/big pellet.png", "Node" : "Sprites/node.png","Pacman" : "Sprites/Pacman.png",
             "Blinky": "Sprites/Blinky.png", "Pinky": "Sprites/Pinky.png", "Inky" : "Sprites/Inky.png",
-            "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png", "Title": "Sprites/title.png"
+            "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png", "Title": "Sprites/title.png",
+            "Play Button" : "Sprites/PlayButton.png"
+
             }
 
 Sounds = { "Pellet1" : "Sounds/1.mp3", "Pellet2" : "Sounds/2.mp3","PowerPellet": "Sounds/Power Pellet.mp3",

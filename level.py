@@ -29,10 +29,12 @@ class Level:
         self.createMap()
 
         self.PowerUp = pg.USEREVENT
+        self.StartGame = pg.USEREVENT
 
         self.pacmanEaten = False
 
         self.title = pg.transform.scale(pg.image.load(Sprites["Title"]),(350,80))
+        self.play = pg.transform.scale(pg.image.load(Sprites["Play Button"]), (200, 65))
         self.pelletSoundIndex = 0
 
         self.pelletSound1 = mixer.Sound(Sounds["Pellet1"])
@@ -91,10 +93,8 @@ class Level:
 
                             else:
                                 pass
-                                # self.pacmanEaten = True
-                                # self.pacman.kill()
-
-
+                                #self.pacmanEaten = True
+                                #self.pacman.eaten = True
 
 
     def createMap(self):
@@ -123,7 +123,8 @@ class Level:
                     Tile(Sprites["Blank"], (x, y), [self.visible_sprites])
 
                 if column == "G":
-                    Tile(Sprites["Gate"], (x, y), [self.visible_sprites])
+                    self.gate = Tile(Sprites["Gate"], (x, y), [self.visible_sprites,self.collision_sprites])
+                    print(x,y)
 
                 if column == "PP":
                     PowerPellet(Sprites["PowerPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "PowerPellet")
@@ -148,12 +149,12 @@ class Level:
         self.portal = Portal(Sprites["Blank"], (20, 300), [self.portal_sprite],(560, 310))
         self.portal = Portal(Sprites["Blank"], (560, 300), [self.portal_sprite],(40, 310))
 
-        self.pacman = Pacman(Sprites["Pacman"], (300, 360), [self.visible_sprites, self.pacman_Sprite], self.collision_sprites, self.nodes_sprites, self.portal_sprite)
+        self.pacman = Pacman(Sprites["Pacman"], (300, 360), [self.visible_sprites, self.pacman_Sprite], self.collision_sprites, self.nodes_sprites, self.portal_sprite,self)
 
-        self.blinky = Blinky(Sprites["Blinky"], self.blinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
-        self.pinky = Pinky(Sprites["Pinky"], self.pinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
-        self.inky = Inky(Sprites["Inky"], self.inky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self.blinky)
-        self.clyde = Clyde(Sprites["Clyde"], self.clyde_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite)
+        self.blinky = Blinky(Sprites["Blinky"], self.blinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
+        self.pinky = Pinky(Sprites["Pinky"], self.pinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
+        self.inky = Inky(Sprites["Inky"], self.inky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self.blinky,self)
+        self.clyde = Clyde(Sprites["Clyde"], self.clyde_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
 
 
     def GameOver(self):
@@ -172,22 +173,44 @@ class Level:
         direction.y = y
 
         return round(direction.x),round(direction.y)
+
+
+    def PlayGame(self):
+        self.visible_sprites.draw(self.screen)
+
+        self.PacmanCollisionLogic()
+
+        if self.pinky.bounceCount >= self.pinky.homeDuration:
+            self.gate.remove(self.collision_sprites)
+
+
+        self.blinky.update()
+        self.pinky.update()
+        self.inky.update()
+        self.clyde.update()
+
+
+        self.pacman.update()
+
+    def TitleScreen(self):
+        mouse_pos = pg.mouse.get_pos()
+        
+        title = self.screen.blit(self.title, (110, 60))
+        play_button = self.screen.blit(self.play, (185, 170))
+        
+        if play_button.collidepoint(mouse_pos):
+            if pg.mouse.get_pressed()[0]:
+                self.startLevel = True
+
+
+
     def run(self):
 
         if self.startLevel:
-            self.visible_sprites.draw(self.screen)
-
-            self.PacmanCollisionLogic()
-
-            if not self.GameOver():
-                self.blinky.update()
-                self.pinky.update()
-                self.inky.update()
-                self.clyde.update()
-
-            self.pacman.update()
+            self.PlayGame()
         else:
-            title = self.screen.blit(self.title,(110,60))
+            self.TitleScreen()
+
 
 
 

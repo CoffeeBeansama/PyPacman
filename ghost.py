@@ -78,18 +78,57 @@ class BaseState(ABC):
 
 class HomeState(BaseState):
 
+
     def EnterState(self):
+
+
         self.main.hitbox.center = self.main.startingPos
+        self.main.VerticalMovement(self.main.direction,-1)
+
+
     def CheckSwitchState(self):
+        if self.main.level.startLevel:
+            if self.main.bounceCount >= self.main.homeDuration:
+                if self.main.rect.y == self.main.startingPos[1]:
+                    if self.main.hitbox.x < 280:
+                        self.main.HorizontalMovement(self.main.direction, 1)
+                    else:
+                        self.main.HorizontalMovement(self.main.direction, -1)
 
-        currentTime = pg.time.get_ticks()
+                if self.main.hitbox.x == 280:
+                    self.main.VerticalMovement(self.main.direction, -1)
 
-        if currentTime - 0 >= self.main.homeDuration:
-            self.SwitchState(self.stateCache.ScatterState())
+                if self.main.hitbox.center == self.main.gatePos:
+                    self.SwitchState(self.stateCache.ScatterState())
+
+
+
+
+    def HomeIdle(self):
+        for sprite in self.main.collision_sprite:
+            if sprite.rect.colliderect(self.main.rect):
+                 if self.main.direction.y < 0:
+                     self.main.bounceCount += 1
+                     self.main.rect.top = sprite.rect.bottom
+                     self.main.VerticalMovement(self.main.direction,1)
+                 else:
+                     self.main.bounceCount += 1
+                     self.main.rect.bottom = sprite.rect.top
+                     self.main.VerticalMovement(self.main.direction, -1)
+
+
+        self.main.rect.center += self.main.direction * ghost_speed
+        self.main.hitbox.x += self.main.direction.x * ghost_speed
+        self.main.hitbox.y += self.main.direction.y * ghost_speed
 
 
     def UpdateState(self):
         self.CheckSwitchState()
+        self.HomeIdle()
+        print("home state")
+
+        self.main.rect.center = self.main.hitbox.center
+
 
 
 
@@ -304,15 +343,23 @@ class Ghosts(Entity):
         elif self.direction.x == 1:
             self.spriteDirection = "Right"
 
+    def RestartState(self):
+        self.rect.centerx = self.startingPos[0]
+        self.rect.centery = self.startingPos[1]
+
+        self.currentState = self.stateCache.HomeState()
+
+
+
 
 class Blinky(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
         super().__init__(group)
 
         self.name = "Blinky"
-
-        self.homeDuration = 1000
+        self.bounceCount = 0
+        self.homeDuration = 0
         self.ScatterDuration = 15000
         self.startingPos = (280,300)
         self.gatePos = (290, 250)
@@ -322,6 +369,7 @@ class Blinky(Ghosts):
         self.nodes = node_sprite
         self.node_object = node_object
 
+        self.level = level
         self.color = (255,0,0)
 
         self.eye = pg.image.load("Sprites/Ghosts/Body/Up/1.png")
@@ -346,7 +394,6 @@ class Blinky(Ghosts):
         return self.player.rect.center
 
     def update(self):
-
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -356,19 +403,22 @@ class Blinky(Ghosts):
 
 class Pinky(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
         super().__init__(group)
 
         self.name = "Pinky"
 
-        self.homeDuration = 5000
+        self.homeDuration = 6
+        self.bounceCount = 0
         self.ScatterDuration = 16000
-        self.startingPos = (280, 300)
+        self.startingPos = (290, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
         self.node_object = node_object
+
+        self.level = level
 
         self.color = (255, 80, 255)
 
@@ -412,7 +462,6 @@ class Pinky(Ghosts):
         return (x,y)
 
     def update(self):
-
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -421,19 +470,22 @@ class Pinky(Ghosts):
 
 class Inky(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky,level):
         super().__init__(group)
 
         self.name = "Inky"
 
-        self.homeDuration = 9000
+        self.homeDuration = 10
+        self.bounceCount = 0
         self.ScatterDuration = 17000
-        self.startingPos = (260, 300)
+        self.startingPos = (270, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
         self.nodes = node_sprite
         self.node_object = node_object
+
+        self.level = level
 
         self.color = (224,255,255)
         self.player = player
@@ -496,13 +548,14 @@ class Inky(Ghosts):
 
 class Clyde(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite):
+    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
         super().__init__(group)
 
         self.name = "Clyde"
-        self.homeDuration = 12000
+        self.homeDuration = 14
+        self.bounceCount = 0
         self.ScatterDuration = 18000
-        self.startingPos = (300, 280)
+        self.startingPos = (310, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
         self.collision_sprite = collidableSprite
@@ -510,7 +563,7 @@ class Clyde(Ghosts):
         self.node_object = node_object
         self.player = player
 
-
+        self.level = level
         self.color =(255,190,190)
 
         self.currentDirection = "Horizontal"

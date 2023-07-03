@@ -4,13 +4,15 @@ from support import import_folder
 from settings import *
 
 class Pacman(Entity):
-    def __init__(self,image,pos,sprite_group,collidable_sprite,node_sprite,portal_sprite):
+    def __init__(self,image,pos,sprite_group,collidable_sprite,node_sprite,portal_sprite,level):
         super().__init__(sprite_group)
 
         self.image = pg.image.load(image).convert_alpha()
 
         self.image = pg.transform.scale(self.image,(20,20))
 
+        self.eaten = False
+        self.level = level
         self.rect = self.image.get_rect(topleft=pos)
         self.nodes = node_sprite
         self.hitbox = self.rect.inflate(0,0)
@@ -21,7 +23,7 @@ class Pacman(Entity):
         self.PowerUp = False
         self.portals = portal_sprite
 
-        self.spriteDirection = "Left"
+        self.state = "Left"
         self.current_direction = "Left"
         self.next_direction.x = -1
         self.next_direction.y = 0
@@ -31,12 +33,32 @@ class Pacman(Entity):
     def importSprites(self):
         player_path = "Sprites/Pacman/"
 
-        self.animations = {'Up': [], 'Down': [], 'Left': [], 'Right': []
+        self.animations_States = {'Up': [], 'Down': [], 'Left': [], 'Right': [],
+                                  "Death": []
                            }
 
-        for animation in self.animations.keys():
+        for animation in self.animations_States.keys():
             full_path = player_path + animation
-            self.animations[animation] = import_folder(full_path)
+            self.animations_States[animation] = import_folder(full_path)
+
+    def animate(self):
+        # increments the frame index when receiving input
+        # when frame index reaches to maximum it loops over again to repeat the animation cycle
+
+        animation = self.animations_States[self.state]
+        self.frame_index += self.animation_time
+
+
+        if self.frame_index >= len(animation):
+            if self.state == "Death":
+                self.level.startLevel = False
+
+            else:
+                self.frame_index = 0
+
+
+        self.image = animation[int(self.frame_index)] if self.level.startLevel else pg.image.load(Sprites["Blank"]).convert_alpha()
+        self.rect = self.image.get_rect(center=self.hitbox.center)
 
 
     def setDirection(self,direction):
@@ -79,30 +101,21 @@ class Pacman(Entity):
                     self.HorizontalMovement(direction, 1)
 
     def getSpriteDirection(self):
-
-        if self.direction.y == -1:
-            self.spriteDirection = "Up"
-        elif self.direction.y == 1:
-            self.spriteDirection = "Down"
-        elif self.direction.x == -1:
-            self.spriteDirection = "Left"
-        elif self.direction.x == 1:
-            self.spriteDirection = "Right"
-
-    def animate(self):
-
-        # increments the frame index when receiving input
-        # when frame index reaches to maximum it loops over again to repeat the animation cycle
-
-        animation = self.animations[self.spriteDirection]
-        self.frame_index += self.animation_time
-
-        if self.frame_index >= len(animation):
-            self.frame_index = 0
+        if not self.eaten:
+            if self.direction.y == -1:
+                self.state = "Up"
+            elif self.direction.y == 1:
+                self.state = "Down"
+            elif self.direction.x == -1:
+                self.state = "Left"
+            elif self.direction.x == 1:
+                self.state = "Right"
+        else:
+            self.state = "Death"
 
 
-        self.image = animation[int(self.frame_index)]
-        self.rect = self.image.get_rect(center=self.hitbox.center)
+
+
 
 
     def get_inputs(self):

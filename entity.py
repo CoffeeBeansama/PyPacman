@@ -18,7 +18,7 @@ class Entity(pg.sprite.Sprite):
         self.frame_index = 0
         self.animation_time = 1 / 6
 
-        self.spriteDirection = "Up"
+        self.state = "Up"
 
         self.Direction = {"Up": (0,-1), "Down": (0,1),
                           "Left": (-1,0), "Right": (1,0)

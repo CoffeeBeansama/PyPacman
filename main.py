@@ -28,6 +28,10 @@ class Game:
 
 
 
+
+
+
+
             self.screen.fill("black")
             self.level.run()
             pg.display.update()
