@@ -26,7 +26,10 @@ class Level:
         self.pinky_pos = (280,300)
         self.inky_pos = (260, 300)
         self.clyde_pos = (300, 300)
-        self.createMap()
+
+        self.pelletsEaten = []
+        self.ghosts = []
+
 
         self.PowerUp = pg.USEREVENT
         self.StartGame = pg.USEREVENT
@@ -44,21 +47,12 @@ class Level:
         mixer.music.set_volume(0.08)
         mixer.music.play(-1)
 
+        self.createMap()
 
 
-    def PlaySFX(self,object):
 
-        if object == "Pellet":
-            sfx = [self.pelletSound1,self.pelletSound2]
-            self.pelletSoundIndex += 1
 
-            if self.pelletSoundIndex >= len(sfx):
-                self.pelletSoundIndex = 0
 
-            pg.mixer.Sound.play(sfx[self.pelletSoundIndex])
-
-        if object == "PowerPellet":
-            pass
 
     def PacmanCollisionLogic(self):
 
@@ -72,29 +66,15 @@ class Level:
                     for target_sprite in collisionSprite:
                         if target_sprite.object_type == "pellet":
 
-                            self.PlaySFX("Pellet")
-                            target_sprite.eat()
-
+                            self.ObjectEaten("Pellet",target_sprite)
 
                         if target_sprite.object_type == "PowerPellet":
 
-                            self.PlaySFX("PowerPellet")
-                            target_sprite.powerUp(self.pacman)
-                            pg.time.set_timer(self.PowerUp,12000)
-                            target_sprite.eat()
+                            self.ObjectEaten("PowerPellet",target_sprite)
 
                         if target_sprite.object_type == "Ghost":
 
-                            if self.pacman.PowerUp:
-
-                                notOnEatenState = target_sprite.currentState != target_sprite.stateCache.EatenState()
-                                if notOnEatenState:
-                                    target_sprite.currentState.SwitchState(target_sprite.stateCache.EatenState())
-
-                            else:
-                                pass
-                                #self.pacmanEaten = True
-                                #self.pacman.eaten = True
+                            self.ObjectEaten("Ghost",target_sprite)
 
 
     def createMap(self):
@@ -106,8 +86,10 @@ class Level:
                 y = row_index * tilesize
 
                 if column == "*":
-                    pass
                     self.smallPellet = Smol_pellet(Sprites["SmallPellet"], (x,y), [self.visible_sprites, self.eatable_sprites], "pellet")
+
+                if column == "PP":
+                    PowerPellet(Sprites["PowerPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "PowerPellet")
 
                 if column == "W":
 
@@ -124,14 +106,12 @@ class Level:
 
                 if column == "G":
                     self.gate = Tile(Sprites["Gate"], (x, y), [self.visible_sprites,self.collision_sprites])
-                    print(x,y)
 
-                if column == "PP":
-                    PowerPellet(Sprites["PowerPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "PowerPellet")
 
                 if column == "N":
                     self.node = Node(Sprites["Blank"], (x, y), [self.visible_sprites, self.nodes_sprites])
                     self.smallPellet = Smol_pellet(Sprites["SmallPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "pellet")
+
 
                     #top
                     if map[row_index-1][column_index] != "W":
@@ -146,15 +126,44 @@ class Level:
                     if map[row_index][column_index+1] != "W":
                         self.node.availableDirections.append(self.Vector2(1,0))
 
+
         self.portal = Portal(Sprites["Blank"], (20, 300), [self.portal_sprite],(560, 310))
         self.portal = Portal(Sprites["Blank"], (560, 300), [self.portal_sprite],(40, 310))
 
-        self.pacman = Pacman(Sprites["Pacman"], (300, 360), [self.visible_sprites, self.pacman_Sprite], self.collision_sprites, self.nodes_sprites, self.portal_sprite,self)
+        self.pacman = Pacman(Sprites["Pacman"],[self.visible_sprites, self.pacman_Sprite], self.collision_sprites, self.nodes_sprites, self.portal_sprite,self)
 
         self.blinky = Blinky(Sprites["Blinky"], self.blinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
         self.pinky = Pinky(Sprites["Pinky"], self.pinky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
         self.inky = Inky(Sprites["Inky"], self.inky_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self.blinky,self)
         self.clyde = Clyde(Sprites["Clyde"], self.clyde_pos, [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
+
+        self.ghosts.extend([self.blinky,self.pinky,self.inky,self.clyde])
+
+    def ObjectEaten(self, object,type):
+
+        if object == "Pellet":
+            sfx = [self.pelletSound1,self.pelletSound2]
+            self.pelletSoundIndex += 1
+
+            if self.pelletSoundIndex >= len(sfx):
+                self.pelletSoundIndex = 0
+
+            pg.mixer.Sound.play(sfx[self.pelletSoundIndex])
+            type.eat(self.pacman, [self.visible_sprites, self.eatable_sprites])
+            self.pelletsEaten.append(type)
+
+        if object == "PowerPellet":
+            pg.time.set_timer(self.PowerUp, 12000)
+            type.eat(self.pacman, [self.visible_sprites, self.eatable_sprites])
+            self.pelletsEaten.append(type)
+
+        if object == "Ghost":
+            if self.pacman.PowerUp:
+                type.Eaten()
+
+            else:
+                self.pacman.eaten = True
+
 
 
     def GameOver(self):
@@ -162,6 +171,7 @@ class Level:
 
         if self.pacmanEaten:
             return True
+
         elif allPelletsConsumed:
             return True
 
@@ -194,7 +204,7 @@ class Level:
 
     def TitleScreen(self):
         mouse_pos = pg.mouse.get_pos()
-        
+
         title = self.screen.blit(self.title, (110, 60))
         play_button = self.screen.blit(self.play, (185, 170))
         
@@ -203,13 +213,41 @@ class Level:
                 self.startLevel = True
 
 
+    def ResetPellets(self):
+        for pellets in self.pelletsEaten:
+            pellets.add(self.visible_sprites,self.eatable_sprites)
+
+        self.pelletsEaten.clear()
+
+
+    def ResetGhosts(self):
+        for ghosts in self.ghosts:
+            ghosts.ResetState()
+
+            #Resets the Drawing of Layers
+            ghosts.remove(self.visible_sprites)
+            ghosts.add(self.visible_sprites)
+
+    def ResetGame(self):
+        self.pacmanEaten = False
+        self.ResetPellets()
+        self.ResetGhosts()
+        self.pacman.ResetState()
+        self.gate.add(self.collision_sprites)
+
+
 
     def run(self):
 
         if self.startLevel:
-            self.PlayGame()
+            if not self.GameOver():
+                self.PlayGame()
+            else:
+                self.ResetGame()
+
         else:
             self.TitleScreen()
+
 
 
 

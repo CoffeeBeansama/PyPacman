@@ -69,6 +69,9 @@ class BaseState(ABC):
         newState.EnterState()
         self.main.currentState = newState
 
+
+
+
     def RandomValue(self):
         direction = random.choice(directions)
         value = random.choice(direction_axis)
@@ -80,8 +83,6 @@ class HomeState(BaseState):
 
 
     def EnterState(self):
-
-
         self.main.hitbox.center = self.main.startingPos
         self.main.VerticalMovement(self.main.direction,-1)
 
@@ -125,10 +126,9 @@ class HomeState(BaseState):
     def UpdateState(self):
         self.CheckSwitchState()
         self.HomeIdle()
-        print("home state")
+  
 
         self.main.rect.center = self.main.hitbox.center
-
 
 
 
@@ -140,7 +140,6 @@ class ScatterState(BaseState):
 
     def EnterState(self):
         self.main.hitbox.center = self.main.gatePos
-
         self.main.HorizontalMovement(self.main.direction,self.RandomValue()[1])
 
     def UpdateState(self):
@@ -317,6 +316,10 @@ class Ghosts(Entity):
         eye = self.animations[self.spriteDirection][0]
         return self.screen.blit(eye, (self.rect.x, self.rect.y))
 
+    def Eaten(self):
+        if self.currentState != self.stateCache.EatenState():
+            self.currentState.SwitchState(self.stateCache.EatenState())
+
 
     def animate(self):
         animation = self.animations[self.name] if self.currentState != self.stateCache.FrightenedState() else self.animations["Frightened"]
@@ -343,11 +346,7 @@ class Ghosts(Entity):
         elif self.direction.x == 1:
             self.spriteDirection = "Right"
 
-    def RestartState(self):
-        self.rect.centerx = self.startingPos[0]
-        self.rect.centery = self.startingPos[1]
 
-        self.currentState = self.stateCache.HomeState()
 
 
 
@@ -392,6 +391,10 @@ class Blinky(Ghosts):
 
     def TargetTile(self):
         return self.player.rect.center
+
+    def ResetState(self):
+        self.currentState = self.stateCache.ScatterState()
+        self.currentState.EnterState()
 
     def update(self):
         self.CheckPortalCollision()
@@ -460,6 +463,12 @@ class Pinky(Ghosts):
             y = playerY
 
         return (x,y)
+
+    def ResetState(self):
+        self.bounceCount = 0
+        self.currentState = self.stateCache.HomeState()
+        self.currentState.EnterState()
+
 
     def update(self):
         self.CheckPortalCollision()
@@ -538,6 +547,10 @@ class Inky(Ghosts):
 
         return targetTileX,targetTileY
 
+    def ResetState(self):
+        self.bounceCount = 0
+        self.currentState = self.stateCache.HomeState()
+        self.currentState.EnterState()
     def update(self):
 
         self.CheckPortalCollision()
@@ -599,6 +612,11 @@ class Clyde(Ghosts):
         else:
 
             return self.player.rect.center
+
+    def ResetState(self):
+        self.bounceCount = 0
+        self.currentState = self.stateCache.HomeState()
+        self.currentState.EnterState()
 
     def update(self):
 

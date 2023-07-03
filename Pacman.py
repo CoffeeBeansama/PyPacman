@@ -4,16 +4,17 @@ from support import import_folder
 from settings import *
 
 class Pacman(Entity):
-    def __init__(self,image,pos,sprite_group,collidable_sprite,node_sprite,portal_sprite,level):
+    def __init__(self,image,sprite_group,collidable_sprite,node_sprite,portal_sprite,level):
         super().__init__(sprite_group)
 
         self.image = pg.image.load(image).convert_alpha()
 
         self.image = pg.transform.scale(self.image,(20,20))
 
+        self.start_pos = (300, 360)
         self.eaten = False
         self.level = level
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=self.start_pos)
         self.nodes = node_sprite
         self.hitbox = self.rect.inflate(0,0)
         self.collision_sprite = collidable_sprite
@@ -29,6 +30,14 @@ class Pacman(Entity):
         self.next_direction.y = 0
 
         self.HorizontalMovement(self.direction, -1)
+
+    def ResetState(self):
+        self.eaten = False
+        self.hitbox.x = self.start_pos[0]
+        self.hitbox.y = self.start_pos[1]
+        self.rect.center = self.hitbox.center
+        self.HorizontalMovement(self.direction,-1)
+
 
     def importSprites(self):
         player_path = "Sprites/Pacman/"
@@ -51,6 +60,8 @@ class Pacman(Entity):
 
         if self.frame_index >= len(animation):
             if self.state == "Death":
+
+                self.level.pacmanEaten = True
                 self.level.startLevel = False
 
             else:
@@ -100,7 +111,7 @@ class Pacman(Entity):
                 if self.NodeCollided():
                     self.HorizontalMovement(direction, 1)
 
-    def getSpriteDirection(self):
+    def getSpriteState(self):
         if not self.eaten:
             if self.direction.y == -1:
                 self.state = "Up"
@@ -136,11 +147,15 @@ class Pacman(Entity):
 
 
     def update(self):
-        self.get_inputs()
+
         self.CheckPortalCollision()
-        self.setDirection(self.direction)
-        self.getSpriteDirection()
+        self.getSpriteState()
+
+        if not self.eaten:
+            self.get_inputs()
+            self.movement(pacman_Speed)
+            self.setDirection(self.direction)
+
         self.animate()
-        self.movement(pacman_Speed)
 
 

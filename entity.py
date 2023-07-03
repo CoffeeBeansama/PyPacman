@@ -31,6 +31,10 @@ class Entity(pg.sprite.Sprite):
     def importSprites(self):
         pass
 
+    @abstractmethod
+    def ResetState(self):
+        pass
+
     def animate(self):
         pass
 
