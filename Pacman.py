@@ -65,7 +65,6 @@ class Pacman(Entity):
         animation = self.animations_States[self.state]
         self.frame_index += self.animation_time
 
-
         if self.frame_index >= len(animation):
             if self.state == "Death":
 
@@ -74,7 +73,6 @@ class Pacman(Entity):
 
             else:
                 self.frame_index = 0
-
 
         self.image = animation[int(self.frame_index)] if self.level.startLevel else pg.image.load(Sprites["Blank"]).convert_alpha()
         self.rect = self.image.get_rect(center=self.hitbox.center)
