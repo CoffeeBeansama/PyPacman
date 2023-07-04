@@ -5,7 +5,7 @@ WIDTH,HEIGHT = (580,650)
 
 directions = ["Horizontal","Vertical"]
 direction_axis = [-1,1]
-
+pelletSoundIndex = 0
 
 Sprites = {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPellet": "Sprites/smol pellet.png",
             "PowerPellet": "Sprites/big pellet.png", "Node" : "Sprites/node.png","Pacman" : "Sprites/Pacman.png",
@@ -16,12 +16,12 @@ Sprites = {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPel
             }
 
 Sounds = { "Pellet1" : "Sounds/1.mp3", "Pellet2" : "Sounds/2.mp3","PowerPellet": "Sounds/Power Pellet.mp3",
-            "GhostEaten": "Sounds/Ghost Eat.wav","BGM" : "Sounds/Siren.mp3"
+            "GhostEaten": "Sounds/Ghost Eat.wav","BGM" : "Sounds/Siren.mp3","PacmanDeath" : "Sounds/Death.wav"
 }
 
 ghost_speed = 0.9
-ghost_EatenSpeed = 2
-pacman_Speed = 1.2
+ghost_EatenSpeed = 1.6
+pacman_Speed = 1.3
 
 tilesize = 20
 FPS = 60

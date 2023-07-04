@@ -14,7 +14,6 @@ class Entity(pg.sprite.Sprite):
         self.previous_direction = pg.math.Vector2()
 
 
-
         self.frame_index = 0
         self.animation_time = 1 / 6
 

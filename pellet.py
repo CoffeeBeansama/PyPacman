@@ -1,4 +1,6 @@
 import pygame as pg
+from pygame import mixer
+from settings import *
 from abc import ABC,abstractmethod
 
 class Pellet(ABC,pg.sprite.Sprite):
@@ -6,10 +8,6 @@ class Pellet(ABC,pg.sprite.Sprite):
     def __init__(self,groups):
         super().__init__(groups)
         self.collision_count = 0
-
-    @abstractmethod
-    def eat(self,player,groups):
-        pass
 
 class Smol_pellet(Pellet):
 
@@ -23,7 +21,9 @@ class Smol_pellet(Pellet):
         self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
-    def eat(self,player,groups):
+
+
+    def Eaten(self,groups):
         self.remove(groups)
 
 class PowerPellet(Pellet):
@@ -31,12 +31,12 @@ class PowerPellet(Pellet):
         super().__init__(group)
 
         self.image = pg.image.load(image).convert_alpha()
-
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
-    def eat(self,player,groups):
+
+    def Eaten(self,player,groups):
         player.PowerUp = True
         self.remove(groups)
 

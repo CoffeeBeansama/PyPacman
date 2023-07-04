@@ -165,7 +165,7 @@ class ScatterState(BaseState):
     def CheckSwitchState(self):
 
 
-        if self.main.player.PowerUp:
+        if self.main.player.PowerUp and not self.main.eaten:
             self.SwitchState(self.stateCache.FrightenedState())
 
         currentTime = pg.time.get_ticks()
@@ -211,7 +211,7 @@ class ChaseState(BaseState):
 
 
     def CheckSwitchState(self):
-        if self.main.player.PowerUp:
+        if self.main.player.PowerUp and not self.main.eaten:
             self.SwitchState(self.stateCache.FrightenedState())
 
     def ExitState(self):
@@ -258,7 +258,11 @@ class FrightenedState(BaseState):
 class EatenState(BaseState):
 
     def EnterState(self):
+
+       self.healed = False
+       self.main.eaten = True
        pg.mixer.Sound.play(self.main.GhostEatenSound)
+       self.main.remove(self.main.level.visible_sprites)
 
     def UpdateState(self):
 
@@ -280,26 +284,35 @@ class EatenState(BaseState):
                 minDistance = distance
 
         self.main.setDirection(direction)
-        self.main.movement(ghost_EatenSpeed)
+        speed = ghost_EatenSpeed if not self.healed else ghost_speed
+        self.main.movement(speed)
 
 
+    def GoingBackHomeEventSequence(self):
+        if self.main.rect.center == self.main.gatePos and not self.healed:
+            self.main.VerticalMovement(self.main.direction, 1)
+
+        if self.main.hitbox.center == (290, 300):
+            self.healed = True
+            self.main.add(self.main.level.visible_sprites)
+            self.main.VerticalMovement(self.main.direction, -1)
+
+        if self.main.rect.center == self.main.gatePos and self.healed:
+            self.SwitchState(self.stateCache.ScatterState())
 
     def CheckSwitchState(self):
-
-        if self.main.rect.x == self.main.gatePos[0]:
-
-            self.SwitchState(self.stateCache.ScatterState())
+        self.GoingBackHomeEventSequence()
 
 
     def ExitState(self):
-        pass
+        self.healed = False
 
 
 class Ghosts(Entity):
 
     def __init__(self,group):
         super().__init__(group)
-
+        self.eaten = False
         self.GhostEatenSound = mixer.Sound(Sounds["GhostEaten"])
     def importSprites(self):
         path = f"Sprites/Ghosts/Body/"
@@ -353,7 +366,7 @@ class Ghosts(Entity):
 
 class Blinky(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
+    def __init__(self, image,group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
         super().__init__(group)
 
         self.name = "Blinky"
@@ -375,7 +388,7 @@ class Blinky(Ghosts):
 
         self.image = pg.image.load(image).convert_alpha()
 
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=self.startingPos)
         self.hitbox = self.rect.inflate(0, 0)
 
 
@@ -397,6 +410,7 @@ class Blinky(Ghosts):
         self.currentState.EnterState()
 
     def update(self):
+
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -406,7 +420,7 @@ class Blinky(Ghosts):
 
 class Pinky(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
+    def __init__(self, image,group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
         super().__init__(group)
 
         self.name = "Pinky"
@@ -430,7 +444,7 @@ class Pinky(Ghosts):
 
         self.image = pg.image.load(image).convert_alpha()
 
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=self.startingPos)
         self.hitbox = self.rect.inflate(0, 0)
 
         self.object_type = object_type
@@ -444,7 +458,7 @@ class Pinky(Ghosts):
 
     def TargetTile(self):
 
-        playerDirection = self.player.current_direction
+        playerDirection = self.player.state
         playerX = self.player.rect.centerx
         playerY = self.player.rect.centery
 
@@ -479,7 +493,7 @@ class Pinky(Ghosts):
 
 class Inky(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky,level):
+    def __init__(self, image, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky,level):
         super().__init__(group)
 
         self.name = "Inky"
@@ -503,7 +517,7 @@ class Inky(Ghosts):
 
         self.image = pg.image.load(image).convert_alpha()
 
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=self.startingPos)
         self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type
 
@@ -561,7 +575,7 @@ class Inky(Ghosts):
 
 class Clyde(Ghosts):
 
-    def __init__(self, image, pos, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
+    def __init__(self, image, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
         super().__init__(group)
 
         self.name = "Clyde"
@@ -583,7 +597,7 @@ class Clyde(Ghosts):
 
         self.image = pg.image.load(image).convert_alpha()
 
-        self.rect = self.image.get_rect(topleft=pos)
+        self.rect = self.image.get_rect(topleft=self.startingPos)
         self.hitbox = self.rect.inflate(0, 0)
 
         self.object_type = object_type

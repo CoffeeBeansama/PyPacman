@@ -23,8 +23,8 @@ class Game:
                     pg.quit()
                     sys.exit()
 
-                if event.type == self.level.PowerUp:
-                    self.level.pacman.PowerUp = False
+                if event.type == self.level.PowerPelletEaten:
+                    self.level.DisablePowerUp()
 
 
 
