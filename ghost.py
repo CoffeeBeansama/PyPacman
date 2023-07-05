@@ -192,7 +192,7 @@ class ChaseState(BaseState):
             minDistance = sys.float_info.max
 
             #for debugging
-            #pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),5)
+            #pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
 
             for directions in self.main.node_object.availableDirections:
 
@@ -360,10 +360,6 @@ class Ghosts(Entity):
             self.spriteDirection = "Right"
 
 
-
-
-
-
 class Blinky(Ghosts):
 
     def __init__(self, image,group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
@@ -458,23 +454,24 @@ class Pinky(Ghosts):
 
     def TargetTile(self):
 
-        playerDirection = self.player.state
+        playerDirection = self.player.direction
         playerX = self.player.rect.centerx
         playerY = self.player.rect.centery
 
 
-        if playerDirection == "Up":
+        if playerDirection.y < 0:
             x = playerX
             y = playerY - 80
-        elif playerDirection == "Down":
+        elif playerDirection.y > 0:
             x = playerX
             y = playerY + 80
-        elif playerDirection == "Left":
+        elif playerDirection.x < 0:
             x = playerX - 80
             y = playerY
-        elif playerDirection == "Right":
+        elif playerDirection.x > 0:
             x = playerX + 80
             y = playerY
+
 
         return (x,y)
 
@@ -529,23 +526,24 @@ class Inky(Ghosts):
 
     def TargetTile(self):
 
-        playerDirection = self.player.current_direction
+        playerDirection = self.player.direction
         playerX = self.player.rect.centerx
         playerY = self.player.rect.centery
 
         blinkyX = self.blinky.rect.centerx
         blinkyY = self.blinky.rect.centery
 
-        if playerDirection == "Up":
+
+        if playerDirection.y < 0:
             targetX = playerX
             targetY = (playerY - 40)
-        elif playerDirection == "Down":
+        elif playerDirection.y > 0:
             targetX = playerX
             targetY = (playerY + 40)
-        elif playerDirection == "Left":
+        elif playerDirection.x < 0:
             targetX = (playerX - 40)
             targetY = playerY
-        elif playerDirection == "Right":
+        elif playerDirection.x > 0:
             targetX = (playerX + 40)
             targetY = playerY
 
@@ -555,9 +553,10 @@ class Inky(Ghosts):
         tilex = targetX - buffX
         tiley = targetY - buffY
 
-
         targetTileX = (tilex * math.cos(0) - tiley * math.sin(0)) + (buffX * 2)
         targetTileY = (tilex * math.sin(0) + tiley * math.cos(0)) + (buffY * 2)
+
+
 
         return targetTileX,targetTileY
 

@@ -7,33 +7,35 @@ class Pacman(Entity):
     def __init__(self,image,sprite_group,collidable_sprite,node_sprite,portal_sprite,level):
         super().__init__(sprite_group)
 
+        self.PowerUp = False
+        self.eaten = False
+
         self.image = pg.image.load(image).convert_alpha()
 
         self.image = pg.transform.scale(self.image,(20,20))
 
         self.start_pos = (300, 360)
-        self.eaten = False
+
         self.level = level
         self.rect = self.image.get_rect(topleft=self.start_pos)
         self.nodes = node_sprite
         self.hitbox = self.rect.inflate(0,0)
         self.collision_sprite = collidable_sprite
 
-        self.queuedDirection = (0,0)
         self.importSprites()
 
-        self.PowerUp = False
+
         self.portals = portal_sprite
         self.DeathSound = mixer.Sound(Sounds["PacmanDeath"])
         self.state = "Left"
-        self.current_direction = "Left"
-        self.next_direction.x = -1
-        self.next_direction.y = 0
+        self.spriteState = self.state
 
         self.HorizontalMovement(self.direction, -1)
 
     def ResetState(self):
         self.eaten = False
+        self.state = "Left"
+        self.spriteState = self.state
         self.hitbox.x = self.start_pos[0]
         self.hitbox.y = self.start_pos[1]
         self.rect.center = self.hitbox.center
@@ -44,8 +46,6 @@ class Pacman(Entity):
             ghost.Eaten()
         else:
             self.eaten = True
-
-
 
     def importSprites(self):
         player_path = "Sprites/Pacman/"
@@ -62,7 +62,7 @@ class Pacman(Entity):
         # increments the frame index when receiving input
         # when frame index reaches to maximum it loops over again to repeat the animation cycle
 
-        animation = self.animations_States[self.state]
+        animation = self.animations_States[self.spriteState]
         self.frame_index += self.animation_time
 
         if self.frame_index >= len(animation):
@@ -81,47 +81,43 @@ class Pacman(Entity):
     def setDirection(self,direction):
 
         if self.state == "Up":
-            self.VerticalDirection(direction,self.VerticalMovement,-1)
+            self.VerticalDirection(direction,self.VerticalMovement,-1,"Up")
 
         elif self.state == "Down":
-            self.VerticalDirection(direction,self.VerticalMovement,1)
+            self.VerticalDirection(direction,self.VerticalMovement,1,"Down")
 
         elif self.state == "Left":
-            self.HorizontalDirection(direction,self.HorizontalMovement,-1)
+            self.HorizontalDirection(direction,self.HorizontalMovement,-1,"Left")
 
         elif self.state == "Right":
-            self.HorizontalDirection(direction,self.HorizontalMovement,1)
+            self.HorizontalDirection(direction,self.HorizontalMovement,1,"Right")
 
     def checkifAlive(self):
-        if not self.eaten:
-            if self.direction.y == -1:
-                self.state = "Up"
-            elif self.direction.y == 1:
-                self.state = "Down"
-            elif self.direction.x == -1:
-                self.state = "Left"
-            elif self.direction.x == 1:
-                self.state = "Right"
-        else:
+        if self.eaten:
             self.state = "Death"
+            self.spriteState = self.state
 
-    def VerticalDirection(self,direction,function,value):
+    def VerticalDirection(self,direction,function,value,spriteDirection):
         self.savePreviousDirection(direction)
 
         if self.previous_direction.y == value * -1:
             direction.y = direction.y * -1
+            self.spriteState = spriteDirection
         else:
             if self.NodeCollided():
                 function(direction, value)
+                self.spriteState = spriteDirection
 
-    def HorizontalDirection(self,direction,function,value):
+    def HorizontalDirection(self,direction,function,value,spriteDirection):
         self.savePreviousDirection(direction)
-
         if self.previous_direction.x == value * -1:
             direction.x = direction.x * -1
+            self.spriteState = spriteDirection
         else:
             if self.NodeCollided():
                 function(direction, value)
+                self.spriteState = spriteDirection
+
 
     def get_inputs(self):
 
@@ -138,7 +134,6 @@ class Pacman(Entity):
 
         elif keys[pg.K_d]: # Right
             self.state = "Right"
-
 
     def update(self):
 
