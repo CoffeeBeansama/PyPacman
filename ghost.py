@@ -140,6 +140,7 @@ class ScatterState(BaseState):
 
     def EnterState(self):
         self.main.hitbox.center = self.main.gatePos
+
         self.main.HorizontalMovement(self.main.direction,self.RandomValue()[1])
 
     def UpdateState(self):
@@ -168,9 +169,9 @@ class ScatterState(BaseState):
         if self.main.player.PowerUp and not self.main.eaten:
             self.SwitchState(self.stateCache.FrightenedState())
 
-        currentTime = pg.time.get_ticks()
 
-        if currentTime - 0 >= self.main.ScatterDuration:
+
+        if self.main.chaseState:
             self.SwitchState(self.stateCache.ChaseState())
 
 
@@ -192,7 +193,7 @@ class ChaseState(BaseState):
             minDistance = sys.float_info.max
 
             #for debugging
-            #pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
+            pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
 
             for directions in self.main.node_object.availableDirections:
 
@@ -215,7 +216,7 @@ class ChaseState(BaseState):
             self.SwitchState(self.stateCache.FrightenedState())
 
     def ExitState(self):
-        pass
+        self.main.chaseState = False
 
 
 class FrightenedState(BaseState):
@@ -312,6 +313,7 @@ class Ghosts(Entity):
 
     def __init__(self,group):
         super().__init__(group)
+        self.chaseState = False
         self.eaten = False
         self.GhostEatenSound = mixer.Sound(Sounds["GhostEaten"])
     def importSprites(self):
@@ -404,6 +406,7 @@ class Blinky(Ghosts):
     def ResetState(self):
         self.currentState = self.stateCache.ScatterState()
         self.currentState.EnterState()
+        self.chaseState = False
 
     def update(self):
 
@@ -421,7 +424,7 @@ class Pinky(Ghosts):
 
         self.name = "Pinky"
 
-        self.homeDuration = 6
+        self.homeDuration = 2
         self.bounceCount = 0
         self.ScatterDuration = 16000
         self.startingPos = (290, 300)
@@ -479,6 +482,7 @@ class Pinky(Ghosts):
         self.bounceCount = 0
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
+        self.chaseState = False
 
 
     def update(self):
@@ -495,7 +499,7 @@ class Inky(Ghosts):
 
         self.name = "Inky"
 
-        self.homeDuration = 10
+        self.homeDuration = 5
         self.bounceCount = 0
         self.ScatterDuration = 17000
         self.startingPos = (270, 300)
@@ -564,6 +568,7 @@ class Inky(Ghosts):
         self.bounceCount = 0
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
+        self.chaseState = False
     def update(self):
 
         self.CheckPortalCollision()
@@ -578,7 +583,7 @@ class Clyde(Ghosts):
         super().__init__(group)
 
         self.name = "Clyde"
-        self.homeDuration = 14
+        self.homeDuration = 7
         self.bounceCount = 0
         self.ScatterDuration = 18000
         self.startingPos = (310, 300)
@@ -630,6 +635,7 @@ class Clyde(Ghosts):
         self.bounceCount = 0
         self.currentState = self.stateCache.HomeState()
         self.currentState.EnterState()
+        self.chaseState = False
 
     def update(self):
 

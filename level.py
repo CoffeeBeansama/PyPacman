@@ -35,6 +35,7 @@ class Level:
         self.pelletsEaten = []
         self.ghosts = []
 
+        self.GhostchaseMode = pg.USEREVENT
         self.StartGame = pg.USEREVENT
         self.PowerPelletEaten = pg.USEREVENT
 
@@ -152,7 +153,7 @@ class Level:
         if object == "PowerPellet":
             self.score += 50
             PlaySound("PowerPellet")
-            pg.time.set_timer(self.PowerPelletEaten, 12000)
+            pg.time.set_timer(self.PowerPelletEaten, 10000)
             type.Eaten(self.pacman, [self.visible_sprites, self.eatable_sprites])
             self.pelletsEaten.append(type)
 
@@ -190,6 +191,7 @@ class Level:
 
     def PlayGame(self):
         self.visible_sprites.draw(self.screen)
+
         self.GetHighScore()
         self.PacmanCollisionLogic()
 
@@ -225,6 +227,7 @@ class Level:
                 if pg.mouse.get_pressed()[0]:
                     PlayBGM("Level")
                     self.startLevel = True
+                    pg.time.set_timer(self.GhostchaseMode, 17000)
 
     def GameOverScreen(self):
         mouse_pos = pg.mouse.get_pos()
@@ -239,6 +242,7 @@ class Level:
                     PlayBGM("Level")
                     self.ResetGame()
                     self.startLevel = True
+                    pg.time.set_timer(self.GhostchaseMode, 17000)
     def ResetPellets(self):
         for pellets in self.pelletsEaten:
             pellets.add(self.visible_sprites,self.eatable_sprites)

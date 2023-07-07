@@ -26,6 +26,11 @@ class Game:
                 if event.type == self.level.PowerPelletEaten:
                     self.level.DisablePowerUp()
 
+                if event.type == self.level.GhostchaseMode:
+
+                    for ghost in self.level.ghosts:
+                        ghost.chaseState = True
+
 
 
 
