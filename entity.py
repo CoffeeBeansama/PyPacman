@@ -59,8 +59,7 @@ class Entity(pg.sprite.Sprite):
         self.previous_direction.x = direction.x
         self.previous_direction.y = direction.y
 
-    def setNextDirection(self, nextDirection):
-        self.next_directioyy = nextDirection
+
 
     def NodeCollided(self):
 

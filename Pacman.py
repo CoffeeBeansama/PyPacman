@@ -2,6 +2,7 @@ import pygame as pg
 from entity import Entity
 from support import import_folder
 from settings import *
+from Sounds import *
 
 class Pacman(Entity):
     def __init__(self,image,sprite_group,collidable_sprite,node_sprite,portal_sprite,level):
@@ -26,7 +27,6 @@ class Pacman(Entity):
 
 
         self.portals = portal_sprite
-        self.DeathSound = mixer.Sound(Sounds["PacmanDeath"])
         self.state = "Left"
         self.spriteState = self.state
 
@@ -44,8 +44,12 @@ class Pacman(Entity):
     def GhostCollide(self,ghost):
         if self.PowerUp:
             ghost.Eaten()
+            self.level.score += 100
         else:
-            self.eaten = True
+            if not self.eaten:
+                self.eaten = True
+                PlaySound("PacmanDying")
+
 
     def importSprites(self):
         player_path = "Sprites/Pacman/"

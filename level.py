@@ -24,8 +24,13 @@ class Level:
         self.startLevel = False
         self.ghostNumber = 4
 
+        self.score = 0
+        self.highscore = 0
 
+        self.textColor = (255, 255, 255)
 
+        self.mainFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 40)
+        self.scoreFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 12)
 
         self.pelletsEaten = []
         self.ghosts = []
@@ -37,8 +42,14 @@ class Level:
 
         self.title = pg.transform.scale(pg.image.load(Sprites["Title"]),(350,80))
         self.play = pg.transform.scale(pg.image.load(Sprites["Play Button"]), (200, 65))
+        self.sadFace = pg.transform.scale(pg.image.load(Sprites["GameOver"]), (200, 140))
+
+        PlayBGM("Menu")
+
+
 
         self.createMap()
+
 
 
     def PacmanCollisionLogic(self):
@@ -64,6 +75,9 @@ class Level:
                             self.ObjectEaten("Ghost",target_sprite)
 
 
+    def drawText(self,text,font,color,pos):
+        text_image = font.render(text,True,color)
+        self.screen.blit(text_image,pos)
     def createMap(self):
 
         for row_index,row in enumerate(map):
@@ -130,18 +144,20 @@ class Level:
 
         if object == "Pellet":
 
-            PelletSfx(pelletSoundIndex)
+            PlaySound("Pellet")
+            self.score += 10
             type.Eaten([self.visible_sprites, self.eatable_sprites])
             self.pelletsEaten.append(type)
 
         if object == "PowerPellet":
-
-            PowerPelletSfx()
+            self.score += 50
+            PlaySound("PowerPellet")
             pg.time.set_timer(self.PowerPelletEaten, 12000)
             type.Eaten(self.pacman, [self.visible_sprites, self.eatable_sprites])
             self.pelletsEaten.append(type)
 
         if object == "Ghost":
+
             self.pacman.GhostCollide(type)
 
 
@@ -174,7 +190,7 @@ class Level:
 
     def PlayGame(self):
         self.visible_sprites.draw(self.screen)
-
+        self.GetHighScore()
         self.PacmanCollisionLogic()
 
         self.OpenTheGates()
@@ -184,25 +200,45 @@ class Level:
         self.inky.update()
         self.clyde.update()
 
-
         self.pacman.update()
 
+        self.DrawScores()
 
+    def GetHighScore(self):
+
+        currentScore = self.score
+
+        if currentScore >= self.highscore:
+            self.highscore = currentScore
+
+    def DrawScores(self):
+        self.drawText(f"top score: {self.highscore}", self.scoreFont, self.textColor, (100, 3))
+        self.drawText(f"score: {self.score}", self.scoreFont, self.textColor, (350, 3))
 
     def TitleScreen(self):
         mouse_pos = pg.mouse.get_pos()
+        if not self.startLevel:
+            title = self.drawText("pacman", self.mainFont, self.textColor, (120, 60))
+            play_button = self.screen.blit(self.play, (185, 170))
 
-        title = self.screen.blit(self.title, (110, 60))
-        play_button = self.screen.blit(self.play, (185, 170))
-        
-        if play_button.collidepoint(mouse_pos):
-            if pg.mouse.get_pressed()[0]:
-                PlayBGM()
-                self.startLevel = True
+            if play_button.collidepoint(mouse_pos):
+                if pg.mouse.get_pressed()[0]:
+                    PlayBGM("Level")
+                    self.startLevel = True
 
+    def GameOverScreen(self):
+        mouse_pos = pg.mouse.get_pos()
+        if self.GameOver():
 
+            self.drawText("game over", self.mainFont, self.textColor, (65, 60))
+            play_button = self.screen.blit(self.play, (185, 170))
+            sadface = self.screen.blit(self.sadFace, (185, 250))
 
-
+            if play_button.collidepoint(mouse_pos):
+                if pg.mouse.get_pressed()[0]:
+                    PlayBGM("Level")
+                    self.ResetGame()
+                    self.startLevel = True
     def ResetPellets(self):
         for pellets in self.pelletsEaten:
             pellets.add(self.visible_sprites,self.eatable_sprites)
@@ -219,6 +255,7 @@ class Level:
             ghosts.add(self.visible_sprites)
 
     def ResetGame(self):
+        self.score = 0
         self.pacmanEaten = False
         self.ResetPellets()
         self.ResetGhosts()
@@ -229,14 +266,16 @@ class Level:
 
     def run(self):
 
-        if self.startLevel:
-            if not self.GameOver():
-                self.PlayGame()
-            else:
-                self.ResetGame()
-
+        if self.GameOver():
+            self.GameOverScreen()
         else:
             self.TitleScreen()
+            if self.startLevel:
+                self.PlayGame()
+
+
+
+
 
 
 

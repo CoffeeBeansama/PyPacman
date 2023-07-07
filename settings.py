@@ -1,22 +1,23 @@
 import pygame as pg
 from pygame import mixer
 
+
 WIDTH,HEIGHT = (580,650)
 
 directions = ["Horizontal","Vertical"]
 direction_axis = [-1,1]
-pelletSoundIndex = 0
+
 
 Sprites = {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPellet": "Sprites/smol pellet.png",
             "PowerPellet": "Sprites/big pellet.png", "Node" : "Sprites/node.png","Pacman" : "Sprites/Pacman.png",
             "Blinky": "Sprites/Blinky.png", "Pinky": "Sprites/Pinky.png", "Inky" : "Sprites/Inky.png",
             "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png", "Title": "Sprites/title.png",
-            "Play Button" : "Sprites/PlayButton.png"
-
+            "Play Button" : "Sprites/PlayButton.png","GameOver": "Sprites/GameOver.png"
             }
 
 Sounds = { "Pellet1" : "Sounds/1.mp3", "Pellet2" : "Sounds/2.mp3","PowerPellet": "Sounds/Power Pellet.mp3",
             "GhostEaten": "Sounds/Ghost Eat.wav","BGM" : "Sounds/Siren.mp3","PacmanDeath" : "Sounds/Death.wav"
+           ,"MainMenu" : "Sounds/Menu.wav"
 }
 
 ghost_speed = 0.9
@@ -25,8 +26,6 @@ pacman_Speed = 1.3
 
 tilesize = 20
 FPS = 60
-
-
 
 # * => small pellet, b => big pellet, P => Pacman, W => Wall, G1 => Blinky, G2 => Pinky, G3 => Inky, G4 => Clyde, E=> Exit
 
