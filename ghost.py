@@ -193,7 +193,7 @@ class ChaseState(BaseState):
             minDistance = sys.float_info.max
 
             #for debugging
-            pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
+            #pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
 
             for directions in self.main.node_object.availableDirections:
 
@@ -388,8 +388,6 @@ class Blinky(Ghosts):
 
         self.rect = self.image.get_rect(topleft=self.startingPos)
         self.hitbox = self.rect.inflate(0, 0)
-
-
 
         self.object_type = object_type
 
