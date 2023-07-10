@@ -7,16 +7,20 @@ class Game:
     def __init__(self):
         pg.init()
 
+
+        self.GameRunning = True
         self.screen = pg.display.set_mode((WIDTH,HEIGHT))
+
+
 
 
         pg.display.set_caption("PyPacman")
         self.clock = pg.time.Clock()
-        self.level = Level()
+        self.level = Level(self)
 
     def run(self):
 
-        while True:
+        while self.GameRunning:
             for event in pg.event.get():
 
                 if event.type == pg.QUIT:

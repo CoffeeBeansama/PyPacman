@@ -4,7 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="update" />
+    <list default="true" id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="update">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sprites/Button.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Sprites/PlayButton.png" beforeDir="false" afterPath="$PROJECT_DIR$/Sprites/PlayButton.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/level.py" beforeDir="false" afterPath="$PROJECT_DIR$/level.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,13 +36,6 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dell/PycharmProjects/PyPacman&quot;
-  }
-}</component>
   <component name="RunManager">
     <configuration name="Pypacman" type="PythonConfigurationType" factoryName="Python">
       <module name="PyPacman" />
@@ -43,8 +44,7 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="C:\Users\Dell\PycharmProjects\PyPacman\venv\Scripts\python.exe" />
-      <option name="SDK_NAME" value="Python 3.9 (PyPacman)" />
+      <option name="SDK_HOME" value="D:\Projects\venv\Scripts\python.exe" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />

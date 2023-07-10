@@ -193,7 +193,9 @@ class ChaseState(BaseState):
             minDistance = sys.float_info.max
 
             #for debugging
-            #pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
+
+            if self.main.level.showTargetTile:
+                pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
 
             for directions in self.main.node_object.availableDirections:
 

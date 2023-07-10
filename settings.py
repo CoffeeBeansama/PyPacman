@@ -12,7 +12,11 @@ Sprites = {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPel
             "PowerPellet": "Sprites/big pellet.png", "Node" : "Sprites/node.png","Pacman" : "Sprites/Pacman.png",
             "Blinky": "Sprites/Blinky.png", "Pinky": "Sprites/Pinky.png", "Inky" : "Sprites/Inky.png",
             "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png", "Title": "Sprites/title.png",
-            "Play Button" : "Sprites/PlayButton.png","GameOver": "Sprites/GameOver.png"
+            "Play Button" : "Sprites/PlayButton.png","GameOver": "Sprites/GameOver.png","Exit Button" : "Sprites/ExitButton.png",
+           "Settings Button" : "Sprites/SettingsButton.png","Path Button" : "Sprites/GhostPath.png", "Yes Button" : "Sprites/Yes Button.png",
+           "No Button": "Sprites/No Button.png", "Back Button" : "Sprites/Back Button.png","Audio Button": "Sprites/Audio Button.png"
+
+
             }
 
 Sounds = { "Pellet1" : "Sounds/1.mp3", "Pellet2" : "Sounds/2.mp3","PowerPellet": "Sounds/Power Pellet.mp3",
