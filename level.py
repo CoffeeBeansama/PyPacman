@@ -35,6 +35,7 @@ class Level:
         self.textColor = (255, 255, 255)
 
         self.mainFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 40)
+        self.controlFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 20)
         self.scoreFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 12)
 
         self.importUISprites()
@@ -90,6 +91,7 @@ class Level:
         self.back = pg.transform.scale(pg.image.load(Sprites["Back Button"]), (140, 65))
         self.sadFace = pg.transform.scale(pg.image.load(Sprites["GameOver"]), (200, 140))
         self.audio = pg.transform.scale(pg.image.load(Sprites["Audio Button"]), (160, 65))
+        self.controls =  pg.transform.scale(pg.image.load(Sprites["Controls"]), (200, 140))
 
     def drawText(self,text,font,color,pos):
         text_image = font.render(text,True,color)
@@ -260,12 +262,14 @@ class Level:
         ghostPath = self.screen.blit(self.path, (100, 170))
         yesBtn = self.screen.blit(self.yes, (310, 170))
         noBtn = self.screen.blit(self.no, (380, 170))
-        backBtn = self.screen.blit(self.back ,(100, 340))
+        backBtn = self.screen.blit(self.back ,(100, 310))
         audio = self.screen.blit(self.audio,(100, 240))
+        self.drawText("controls",self.controlFont,self.textColor,(80, 520))
+        contol = self.screen.blit(self.controls, (320, 460))
 
         if yesBtn.collidepoint(mouse_pos):
             if pg.mouse.get_pressed()[0]:
-              pass
+              self.showTargetTile = True
 
         if backBtn.collidepoint(mouse_pos):
             if pg.mouse.get_pressed()[0]:

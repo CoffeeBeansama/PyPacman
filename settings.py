@@ -14,7 +14,8 @@ Sprites = {"Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png", "SmallPel
             "Clyde" : "Sprites/Clyde.png", "Gate" : "Sprites/gate.png", "Title": "Sprites/title.png",
             "Play Button" : "Sprites/PlayButton.png","GameOver": "Sprites/GameOver.png","Exit Button" : "Sprites/ExitButton.png",
            "Settings Button" : "Sprites/SettingsButton.png","Path Button" : "Sprites/GhostPath.png", "Yes Button" : "Sprites/Yes Button.png",
-           "No Button": "Sprites/No Button.png", "Back Button" : "Sprites/Back Button.png","Audio Button": "Sprites/Audio Button.png"
+           "No Button": "Sprites/No Button.png", "Back Button" : "Sprites/Back Button.png","Audio Button": "Sprites/Audio Button.png",
+           "Controls" : "Sprites/Controls.png"
 
 
             }
