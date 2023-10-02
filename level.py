@@ -47,57 +47,41 @@ class Level:
         self.StartGame = pg.USEREVENT
         self.PowerPelletEaten = pg.USEREVENT
 
-
-
-
         PlayBGM("Menu")
-
-
-
         self.createMap()
 
 
-
     def PacmanCollisionLogic(self):
-
         if self.pacman_Sprite:
-
             for pacman in self.pacman_Sprite:
                 collisionSprite = pg.sprite.spritecollide(pacman, self.eatable_sprites, False)
-
                 if collisionSprite:
-
                     for target_sprite in collisionSprite:
                         if target_sprite.object_type == "pellet":
-
                             self.ObjectEaten("Pellet",target_sprite)
-
                         if target_sprite.object_type == "PowerPellet":
-
                             self.ObjectEaten("PowerPellet",target_sprite)
-
                         if target_sprite.object_type == "Ghost":
-
                             self.ObjectEaten("Ghost",target_sprite)
 
     def importUISprites(self):
-        self.title = pg.transform.scale(pg.image.load(Sprites["Title"]), (350, 80))
-        self.play = pg.transform.scale(pg.image.load(Sprites["Play Button"]), (200, 65))
-        self.settings = pg.transform.scale(pg.image.load(Sprites["Settings Button"]), (100, 60))
-        self.exit = pg.transform.scale(pg.image.load(Sprites["Exit Button"]), (140, 60))
-        self.path = pg.transform.scale(pg.image.load(Sprites["Path Button"]), (200, 65))
-        self.yes = pg.transform.scale(pg.image.load(Sprites["Yes Button"]), (60, 60))
-        self.no = pg.transform.scale(pg.image.load(Sprites["No Button"]), (60, 60))
-        self.back = pg.transform.scale(pg.image.load(Sprites["Back Button"]), (140, 65))
-        self.sadFace = pg.transform.scale(pg.image.load(Sprites["GameOver"]), (200, 140))
-        self.audio = pg.transform.scale(pg.image.load(Sprites["Audio Button"]), (160, 65))
-        self.controls =  pg.transform.scale(pg.image.load(Sprites["Controls"]), (200, 140))
+        self.title = pg.transform.scale(pg.image.load(Sprites["Title"]), (350, 80)).convert_alpha()
+        self.play = pg.transform.scale(pg.image.load(Sprites["Play Button"]), (200, 65)).convert_alpha()
+        self.settings = pg.transform.scale(pg.image.load(Sprites["Settings Button"]), (100, 60)).convert_alpha()
+        self.exit = pg.transform.scale(pg.image.load(Sprites["Exit Button"]), (140, 60)).convert_alpha()
+        self.path = pg.transform.scale(pg.image.load(Sprites["Path Button"]), (200, 65)).convert_alpha()
+        self.yes = pg.transform.scale(pg.image.load(Sprites["Yes Button"]), (60, 60)).convert_alpha()
+        self.no = pg.transform.scale(pg.image.load(Sprites["No Button"]), (60, 60)).convert_alpha()
+        self.back = pg.transform.scale(pg.image.load(Sprites["Back Button"]), (140, 65)).convert_alpha()
+        self.sadFace = pg.transform.scale(pg.image.load(Sprites["GameOver"]), (200, 140)).convert_alpha()
+        self.audio = pg.transform.scale(pg.image.load(Sprites["Audio Button"]), (160, 65)).convert_alpha()
+        self.controls =  pg.transform.scale(pg.image.load(Sprites["Controls"]), (200, 140)).convert_alpha()
 
     def drawText(self,text,font,color,pos):
         text_image = font.render(text,True,color)
         self.screen.blit(text_image,pos)
-    def createMap(self):
 
+    def createMap(self):
         for row_index,row in enumerate(map):
             for column_index,column in enumerate(row):
 
@@ -105,33 +89,24 @@ class Level:
                 y = row_index * tilesize
 
                 if column == "*":
-                    self.smallPellet = Smol_pellet(Sprites["SmallPellet"], (x,y), [self.visible_sprites, self.eatable_sprites], "pellet")
+                    self.smallPellet = Smol_pellet(pelletSprites["SmallPellet"], (x,y), [self.visible_sprites, self.eatable_sprites], "pellet")
 
                 if column == "PP":
-                    PowerPellet(Sprites["PowerPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "PowerPellet")
+                    PowerPellet(pelletSprites["PowerPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "PowerPellet")
 
                 if column == "W":
-
                     self.walls = Tile(Sprites["Wall"], (x, y), [self.visible_sprites,self.collision_sprites])
-
 
                 if column == "E":
                     self.Exit1Tile = Tile(Sprites["Blank"], (x, y), [self.visible_sprites])
-
                     self.Exit2Tile = Tile(Sprites["Blank"], (x, y), [self.visible_sprites])
-
-                if column == "B":
-                    Tile(Sprites["Blank"], (x, y), [self.visible_sprites])
 
                 if column == "G":
                     self.gate = Tile(Sprites["Gate"], (x, y), [self.visible_sprites,self.collision_sprites])
 
-
-                if column == "N":
+                if column == "N" or column == "B":
                     self.node = Node(Sprites["Blank"], (x, y), [self.visible_sprites, self.nodes_sprites])
-                    self.smallPellet = Smol_pellet(Sprites["SmallPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "pellet")
-
-
+                    smallPellet = Smol_pellet(pelletSprites["SmallPellet"], (x, y), [self.visible_sprites, self.eatable_sprites], "pellet")
                     #top
                     if map[row_index-1][column_index] != "W":
                         self.node.availableDirections.append(self.Vector2(0,-1))
@@ -151,32 +126,31 @@ class Level:
 
         self.pacman = Pacman(Sprites["Pacman"],[self.visible_sprites, self.pacman_Sprite], self.collision_sprites, self.nodes_sprites, self.portal_sprite,self)
 
-        self.blinky = Blinky(Sprites["Blinky"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
-        self.pinky = Pinky(Sprites["Pinky"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
-        self.inky = Inky(Sprites["Inky"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self.blinky,self)
-        self.clyde = Clyde(Sprites["Clyde"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
+        self.blinky = Blinky(ghostSprites["Blinky"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
+        self.pinky = Pinky(ghostSprites["Pinky"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
+        self.inky = Inky(ghostSprites["Inky"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self.blinky,self)
+        self.clyde = Clyde(ghostSprites["Clyde"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
 
         self.ghosts.extend([self.blinky,self.pinky,self.inky,self.clyde])
 
     def ObjectEaten(self, object,type):
 
-        if object == "Pellet":
+        match object:
+            case "Pellet":
+                PlaySound("Pellet")
+                self.score += 10
+                type.Eaten([self.visible_sprites, self.eatable_sprites])
+                self.pelletsEaten.append(type)
 
-            PlaySound("Pellet")
-            self.score += 10
-            type.Eaten([self.visible_sprites, self.eatable_sprites])
-            self.pelletsEaten.append(type)
+            case "PowerPellet":
+                self.score += 50
+                PlaySound("PowerPellet")
+                pg.time.set_timer(self.PowerPelletEaten, 10000)
+                type.Eaten(self.pacman, [self.visible_sprites, self.eatable_sprites])
+                self.pelletsEaten.append(type)
 
-        if object == "PowerPellet":
-            self.score += 50
-            PlaySound("PowerPellet")
-            pg.time.set_timer(self.PowerPelletEaten, 10000)
-            type.Eaten(self.pacman, [self.visible_sprites, self.eatable_sprites])
-            self.pelletsEaten.append(type)
-
-        if object == "Ghost":
-
-            self.pacman.GhostCollide(type)
+            case "Ghost":
+                self.pacman.GhostCollide(type)
 
 
     def DisablePowerUp(self):
@@ -185,21 +159,19 @@ class Level:
 
         for ghosts in self.ghosts:
             ghosts.eaten = False
+
     def GameOver(self):
         allPelletsConsumed = len(self.eatable_sprites) - self.ghostNumber <= 0
         if self.pacmanEaten:
             return True
-
         elif allPelletsConsumed:
             return True
-
         return False
+
     def Vector2(self,x,y):
         direction = pg.math.Vector2()
-
         direction.x = x
         direction.y = y
-
         return round(direction.x),round(direction.y)
 
     def OpenTheGates(self):
@@ -208,25 +180,18 @@ class Level:
 
     def PlayGame(self):
         self.visible_sprites.draw(self.screen)
-
         self.GetHighScore()
         self.PacmanCollisionLogic()
-
         self.OpenTheGates()
-
         self.blinky.update()
         self.pinky.update()
         self.inky.update()
         self.clyde.update()
-
         self.pacman.update()
-
         self.DrawScores()
 
     def GetHighScore(self):
-
         currentScore = self.score
-
         if currentScore >= self.highscore:
             self.highscore = currentScore
 
@@ -258,7 +223,6 @@ class Level:
 
     def SettingsScreen(self):
         mouse_pos = pg.mouse.get_pos()
-
         ghostPath = self.screen.blit(self.path, (100, 170))
         yesBtn = self.screen.blit(self.yes, (310, 170))
         noBtn = self.screen.blit(self.no, (380, 170))

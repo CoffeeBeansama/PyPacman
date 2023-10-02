@@ -9,14 +9,6 @@ from settings import *
 from support import import_folder
 
 
-class States(Enum):
-    Home = 1
-    Scatter = 2
-    Chase = 3
-    Frightened = 4
-    Eaten = 5
-
-
 class StateCache:
     def __init__(self, main):
         self.main = main
@@ -41,8 +33,6 @@ class StateCache:
         return self.states["Eaten"]
 
 class BaseState(ABC):
-
-
     @abstractmethod
     def EnterState(self):
         pass
@@ -69,19 +59,13 @@ class BaseState(ABC):
         newState.EnterState()
         self.main.currentState = newState
 
-
-
-
     def RandomValue(self):
         direction = random.choice(directions)
         value = random.choice(direction_axis)
         return direction,value
 
 
-
 class HomeState(BaseState):
-
-
     def EnterState(self):
         self.main.hitbox.center = self.main.startingPos
         self.main.VerticalMovement(self.main.direction,-1)
@@ -101,8 +85,6 @@ class HomeState(BaseState):
 
                 if self.main.hitbox.center == self.main.gatePos:
                     self.SwitchState(self.stateCache.ScatterState())
-
-
 
 
     def HomeIdle(self):
@@ -126,15 +108,10 @@ class HomeState(BaseState):
     def UpdateState(self):
         self.CheckSwitchState()
         self.HomeIdle()
-  
-
         self.main.rect.center = self.main.hitbox.center
-
-
 
     def ExitState(self):
         pass
-
 
 class ScatterState(BaseState):
 
@@ -145,9 +122,7 @@ class ScatterState(BaseState):
 
     def UpdateState(self):
         self.CheckSwitchState()
-
         if self.main.NodeCollided():
-
             index = random.randrange(0,len(self.main.node_object.availableDirections))
 
             goingBack = self.main.node_object.availableDirections[index] == -self.main.direction
@@ -164,12 +139,8 @@ class ScatterState(BaseState):
         self.main.movement(ghost_speed)
 
     def CheckSwitchState(self):
-
-
         if self.main.player.PowerUp and not self.main.eaten:
             self.SwitchState(self.stateCache.FrightenedState())
-
-
 
         if self.main.chaseState:
             self.SwitchState(self.stateCache.ChaseState())
@@ -179,11 +150,8 @@ class ScatterState(BaseState):
         pass
 
 class ChaseState(BaseState):
-
     def EnterState(self):
         pass
-
-
 
     def UpdateState(self):
 
@@ -193,9 +161,8 @@ class ChaseState(BaseState):
             minDistance = sys.float_info.max
 
             #for debugging
-
             if self.main.level.showTargetTile:
-                pg.draw.line(self.main.screen,self.main.color,(self.main.rect.centerx,self.main.rect.centery),(self.main.TargetTile()[0],self.main.TargetTile()[1]),3)
+                pg.draw.line(self.main.screen, self.main.color, (self.main.rect.centerx, self.main.rect.centery),(self.main.TargetTile()[0], self.main.TargetTile()[1]), 3)
 
             for directions in self.main.node_object.availableDirections:
 
@@ -224,12 +191,9 @@ class ChaseState(BaseState):
 class FrightenedState(BaseState):
 
     def EnterState(self):
-        pass
-
-
+        self.main.eaten = False
 
     def UpdateState(self):
-
         self.CheckSwitchState()
 
         direction = pg.math.Vector2()
@@ -259,16 +223,13 @@ class FrightenedState(BaseState):
         pass
 
 class EatenState(BaseState):
-
     def EnterState(self):
-
        self.healed = False
        self.main.eaten = True
        pg.mixer.Sound.play(self.main.GhostEatenSound)
        self.main.remove(self.main.level.visible_sprites)
 
     def UpdateState(self):
-
         self.CheckSwitchState()
 
         direction = pg.math.Vector2()
@@ -330,7 +291,7 @@ class Ghosts(Entity):
             self.animations[animation] = import_folder(full_path)
 
     def animateEyes(self):
-        eye = self.animations[self.spriteDirection][0]
+        eye = self.animations[self.spriteDirection][0].convert_alpha()
         return self.screen.blit(eye, (self.rect.x, self.rect.y))
 
     def Eaten(self):
@@ -342,11 +303,10 @@ class Ghosts(Entity):
         animation = self.animations[self.name] if self.currentState != self.stateCache.FrightenedState() else self.animations["Frightened"]
 
         self.frame_index += self.animation_time
-
         if self.frame_index >= len(animation):
             self.frame_index = 0
 
-        self.image = animation[int(self.frame_index)]
+        self.image = animation[int(self.frame_index)].convert_alpha()
         self.rect = self.image.get_rect(center=self.rect.center)
 
         if self.currentState != self.stateCache.FrightenedState():
@@ -457,24 +417,26 @@ class Pinky(Ghosts):
 
     def TargetTile(self):
 
-        playerDirection = self.player.direction
+        playerDirection = self.player.directionFacing
         playerX = self.player.rect.centerx
         playerY = self.player.rect.centery
 
-
-        if playerDirection.y < 0:
-            x = playerX
-            y = playerY - 80
-        elif playerDirection.y > 0:
-            x = playerX
-            y = playerY + 80
-        elif playerDirection.x < 0:
-            x = playerX - 80
-            y = playerY
-        elif playerDirection.x > 0:
-            x = playerX + 80
-            y = playerY
-
+        match playerDirection:
+            case "Up":
+                x = playerX
+                y = playerY - 80
+            case "Down":
+                x = playerX
+                y = playerY + 80
+            case "Left":
+                x = playerX - 80
+                y = playerY
+            case "Right":
+                x = playerX + 80
+                y = playerY
+            case _:
+                x = self.rect.centerx
+                y = self.rect.centery
 
         return (x,y)
 

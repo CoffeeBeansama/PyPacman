@@ -17,14 +17,13 @@ class Entity(pg.sprite.Sprite):
         self.frame_index = 0
         self.animation_time = 1 / 6
 
-        self.state = "Up"
+        self.directionFacing = "Up"
 
         self.Direction = {"Up": (0,-1), "Down": (0,1),
                           "Left": (-1,0), "Right": (1,0)
                           }
 
         self.wallCollided = False
-
 
     @abstractmethod
     def importSprites(self):
@@ -37,13 +36,11 @@ class Entity(pg.sprite.Sprite):
     def animate(self):
         pass
 
-    def movement(self,speed):
-
-        self.rect.center += self.direction * speed
+    def movement(self, speed):
         self.hitbox.x += self.direction.x * speed
-        self.checkCollisions("Horizontal")
+        self.checkWallCollision("Horizontal")
         self.hitbox.y += self.direction.y * speed
-        self.checkCollisions("Vertical")
+        self.checkWallCollision("Vertical")
         self.rect.center = self.hitbox.center
 
     def HorizontalMovement(self,direction,value):
@@ -53,8 +50,6 @@ class Entity(pg.sprite.Sprite):
         direction.y = value
         direction.x = 0
 
-
-
     def savePreviousDirection(self, direction):
         self.previous_direction.x = direction.x
         self.previous_direction.y = direction.y
@@ -62,7 +57,6 @@ class Entity(pg.sprite.Sprite):
 
 
     def NodeCollided(self):
-
         for sprite in self.nodes:
             if sprite.hitbox.center == self.hitbox.center:
                 self.node_object = sprite
@@ -80,9 +74,7 @@ class Entity(pg.sprite.Sprite):
         if self.NodeCollided():
             self.direction = direction
 
-
-    def checkCollisions(self,direction):
-
+    def checkWallCollision(self,direction):
         if direction == "Horizontal":
             for sprite in self.collision_sprite:
                 if sprite.hitbox.colliderect(self.hitbox):

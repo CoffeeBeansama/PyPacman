@@ -10,13 +10,10 @@ class Pellet(ABC,pg.sprite.Sprite):
         self.collision_count = 0
 
 class Smol_pellet(Pellet):
-
     def __init__(self,image,pos,group,object_type):
         super().__init__(group)
 
-
         self.image = pg.image.load(image).convert_alpha()
-
         self.rect = self.image.get_rect(topleft=pos)
         self.hitbox = self.rect.inflate(0, 0)
         self.object_type = object_type

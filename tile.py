@@ -6,8 +6,6 @@ class Tile(Entity):
         super().__init__(group)
 
         self.image = pg.image.load(image).convert_alpha()
-
         self.rect = self.image.get_rect(topleft=pos)
-
         self.hitbox = self.rect.inflate(0,0)
 

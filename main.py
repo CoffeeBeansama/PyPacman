@@ -19,7 +19,6 @@ class Game:
         self.level = Level(self)
 
     def run(self):
-
         while self.GameRunning:
             for event in pg.event.get():
 
