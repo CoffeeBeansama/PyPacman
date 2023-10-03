@@ -124,9 +124,7 @@ class ScatterState(BaseState):
         self.CheckSwitchState()
         if self.main.NodeCollided():
             index = random.randrange(0,len(self.main.node_object.availableDirections))
-
             goingBack = self.main.node_object.availableDirections[index] == -self.main.direction
-
             if goingBack:
 
                 index += 1

@@ -7,8 +7,6 @@ WIDTH,HEIGHT = (580,650)
 directions = ["Horizontal","Vertical"]
 direction_axis = [-1,1]
 
-
-
 Sprites = {
             "Blank" : "Sprites/Blank.png", "Wall" : "Sprites/Wall.png",
             "Node" : "Sprites/node.png","Pacman" : "Sprites/Pacman.png",
