@@ -6,13 +6,36 @@
   <component name="ChangeListManager">
     <list default="true" id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.pyz" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/PYZ-00.toc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/base_library.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/main" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ghost.py" beforeDir="false" afterPath="$PROJECT_DIR$/ghost.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/Analysis-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/COLLECT-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/EXE-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/PKG-00.toc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/main" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/main.pkg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/warn-main.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/main/xref-main.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/base_library.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_cn.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_hk.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_iso2022.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_jp.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_kr.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_tw.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_multibytecodec.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libbz2.so.1.0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libcrypto.so.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libexpat.so.1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/liblzma.so.5" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libmpdec.so.3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libpython3.10.so.1.0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libz.so.1" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,8 +61,8 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../PyHarvestVille" />
-    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RunManager">
     <configuration name="Pypacman" type="PythonConfigurationType" factoryName="Python">
