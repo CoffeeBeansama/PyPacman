@@ -4,39 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/Analysis-00.toc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/COLLECT-00.toc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/EXE-00.toc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/PKG-00.toc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/main" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/main.pkg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/warn-main.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/main/xref-main.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/base_library.zip" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_bz2.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_cn.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_hk.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_iso2022.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_jp.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_kr.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_codecs_tw.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_contextvars.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_decimal.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_hashlib.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_lzma.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_multibytecodec.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/_opcode.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/lib-dynload/resource.cpython-310-x86_64-linux-gnu.so" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libbz2.so.1.0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libcrypto.so.3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libexpat.so.1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/liblzma.so.5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libmpdec.so.3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libpython3.10.so.1.0" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/main/_internal/libz.so.1" beforeDir="false" />
-    </list>
+    <list default="true" id="69a4246a-292f-4a07-9975-b2bf1269c344" name="Changes" comment="update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -55,15 +23,22 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 5
+}]]></component>
   <component name="ProjectId" id="2R2UODX50i1dMVCcNOjCJg1gYak" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/home/aigo/Documents/GitHub/PyPacman",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
   <component name="RunManager">
     <configuration name="Pypacman" type="PythonConfigurationType" factoryName="Python">
       <module name="PyPacman" />
@@ -72,13 +47,13 @@
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
-      <option name="SDK_HOME" value="D:\Projects\venv\Scripts\python.exe" />
+      <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="$ClipboardContent$$UnixSeparators$$FileName$$TempDir$$FileDirPathFromParent$" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
