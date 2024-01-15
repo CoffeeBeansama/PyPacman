@@ -1,7 +1,7 @@
 # PyPacman
 
 
-A Pacman game clone developed in Pygame with WASD control.
+A Pacman game clone developed in Pygame.
 
 ## Overview
 
