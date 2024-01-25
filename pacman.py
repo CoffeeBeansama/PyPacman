@@ -1,8 +1,10 @@
 import pygame as pg
 from entity import Entity
-from support import import_folder
+from support import import_folder,loadSprite
 from settings import *
 from Sounds import *
+from eventhandler import EventHandler
+
 
 class Pacman(Entity):
     def __init__(self,image,sprite_group,collidable_sprite,node_sprite,portal_sprite,level):
@@ -11,9 +13,7 @@ class Pacman(Entity):
         self.PowerUp = False
         self.eaten = False
 
-        self.image = pg.image.load(image).convert_alpha()
-
-        self.image = pg.transform.scale(self.image,(20,20))
+        self.image = loadSprite(image,(20,20)).convert_alpha()
 
         self.start_pos = (300, 360)
 
@@ -55,8 +55,7 @@ class Pacman(Entity):
     def importSprites(self):
         player_path = "Sprites/Pacman/"
 
-        self.animations_States = {'Up': [], 'Down': [], 'Left': [], 'Right': [],
-                                  "Death": [] }
+        self.animations_States = { 'Up': [], 'Down': [], 'Left': [], 'Right': [], "Death": [] }
 
         for animation in self.animations_States.keys():
             full_path = player_path + animation
@@ -73,72 +72,52 @@ class Pacman(Entity):
             else:
                 self.frame_index = 0
 
-        self.image = animation[int(self.frame_index)].convert_alpha() if self.level.startLevel else pg.image.load(Sprites["Blank"]).convert_alpha()
+        self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.hitbox.center)
-
-
-    def setDirection(self,direction):
-        match self.directionFacing:
-            case "Up":
-                    self.VerticalDirection(direction,self.VerticalMovement,-1,"Up")
-            case "Down":
-                    self.VerticalDirection(direction,self.VerticalMovement,1,"Down")
-            case "Left":
-                    self.HorizontalDirection(direction,self.HorizontalMovement,-1,"Left")
-            case "Right":
-                    self.HorizontalDirection(direction,self.HorizontalMovement,1,"Right")
-
 
     def checkifAlive(self):
         if self.eaten:
             self.directionFacing = "Death"
             self.spriteState = self.directionFacing
 
-    def VerticalDirection(self,direction,function,value,spriteDirection):
-        self.savePreviousDirection(direction)
+    def VerticalDirection(self,function,value,spriteDirection):
+        self.savePreviousDirection(self.direction)
         if self.previous_direction.y == value * -1:
-            direction.y = direction.y * -1
+            self.direction.y = self.direction.y * -1
             self.spriteState = spriteDirection
         else:
             if self.NodeCollided():
-                function(direction, value)
+                function(self.direction, value)
                 self.spriteState = spriteDirection
 
-    def HorizontalDirection(self,direction,function,value,spriteDirection):
-        self.savePreviousDirection(direction)
+    def HorizontalDirection(self,function,value,spriteDirection):
+        self.savePreviousDirection(self.direction)
         if self.previous_direction.x == value * -1:
-            direction.x = direction.x * -1
+            self.direction.x = self.direction.x * -1
             self.spriteState = spriteDirection
         else:
             if self.NodeCollided():
-                function(direction, value)
+                function(self.direction, value)
                 self.spriteState = spriteDirection
 
 
-    def get_inputs(self):
-        keys = pg.key.get_pressed()
-
-        if keys[pg.K_w]: # Up
-            self.directionFacing = "Up"
-
-        elif keys[pg.K_s]: # Down
-            self.directionFacing = "Down"
-
-        if keys[pg.K_a]: # Left
-            self.directionFacing = "Left"
-
-        elif keys[pg.K_d]: # Right
-            self.directionFacing = "Right"
+    def handlePlayerInputs(self):
+        if EventHandler.pressingUpKey():
+            self.VerticalDirection(self.VerticalMovement,-1,"Up")
+        elif EventHandler.pressingDownKey():
+            self.VerticalDirection(self.VerticalMovement,1,"Down")
+        elif EventHandler.pressingLeftKey():
+            self.HorizontalDirection(self.HorizontalMovement,-1,"Left")
+        elif EventHandler.pressingRightKey():
+            self.HorizontalDirection(self.HorizontalMovement,1,"Right")
 
     def update(self):
-
         self.CheckPortalCollision()
         self.checkifAlive()
 
         if not self.eaten:
-            self.get_inputs()
+            self.handlePlayerInputs()
             self.movement(pacman_Speed)
-            self.setDirection(self.direction)
 
         self.animate()
 

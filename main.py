@@ -2,6 +2,7 @@ import sys
 import pygame as pg
 from level import Level
 from settings import *
+from eventhandler import EventHandler
 
 class Game:
     def __init__(self):
@@ -27,16 +28,11 @@ class Game:
                     self.level.DisablePowerUp()
 
                 if event.type == self.level.GhostchaseMode:
-
                     for ghost in self.level.ghosts:
                         ghost.chaseState = True
 
-
-
-
-
-
-
+            
+            EventHandler.handlePlayerInput()
             self.screen.fill("black")
             self.level.run()
             pg.display.update()

@@ -2,12 +2,14 @@ import pygame as pg
 from pygame import mixer
 from tile import Tile
 from settings import *
-from Pacman import Pacman
+from pacman import Pacman
 from node import *
 from pellet import *
 from ghost import *
 from portal import Portal
 from Sounds import *
+from mainmenu import MainMenu
+
 class Level:
 
     def __init__(self,main):
@@ -22,10 +24,12 @@ class Level:
         self.collision_sprites = pg.sprite.Group()
         self.nodes_sprites = pg.sprite.Group()
         self.pacman_Sprite = pg.sprite.Group()
+        
 
-        self.startLevel = False
+        self.mainMenu = MainMenu()
+
+        self.startLevel = True
         self.pacmanEaten = False
-        self.displaySettings = False
         self.showTargetTile = False
         self.ghostNumber = 4
 
@@ -38,7 +42,6 @@ class Level:
         self.controlFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 20)
         self.scoreFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 12)
 
-        self.importUISprites()
 
         self.pelletsEaten = []
         self.ghosts = []
@@ -64,18 +67,6 @@ class Level:
                         if target_sprite.object_type == "Ghost":
                             self.ObjectEaten("Ghost",target_sprite)
 
-    def importUISprites(self):
-        self.title = pg.transform.scale(pg.image.load(Sprites["Title"]), (350, 80)).convert_alpha()
-        self.play = pg.transform.scale(pg.image.load(Sprites["Play Button"]), (200, 65)).convert_alpha()
-        self.settings = pg.transform.scale(pg.image.load(Sprites["Settings Button"]), (100, 60)).convert_alpha()
-        self.exit = pg.transform.scale(pg.image.load(Sprites["Exit Button"]), (140, 60)).convert_alpha()
-        self.path = pg.transform.scale(pg.image.load(Sprites["Path Button"]), (200, 65)).convert_alpha()
-        self.yes = pg.transform.scale(pg.image.load(Sprites["Yes Button"]), (60, 60)).convert_alpha()
-        self.no = pg.transform.scale(pg.image.load(Sprites["No Button"]), (60, 60)).convert_alpha()
-        self.back = pg.transform.scale(pg.image.load(Sprites["Back Button"]), (140, 65)).convert_alpha()
-        self.sadFace = pg.transform.scale(pg.image.load(Sprites["GameOver"]), (200, 140)).convert_alpha()
-        self.audio = pg.transform.scale(pg.image.load(Sprites["Audio Button"]), (160, 65)).convert_alpha()
-        self.controls =  pg.transform.scale(pg.image.load(Sprites["Controls"]), (200, 140)).convert_alpha()
 
     def drawText(self,text,font,color,pos):
         text_image = font.render(text,True,color)
@@ -134,7 +125,6 @@ class Level:
         self.ghosts.extend([self.blinky,self.pinky,self.inky,self.clyde])
 
     def ObjectEaten(self, object,type):
-
         match object:
             case "Pellet":
                 PlaySound("Pellet")
@@ -178,16 +168,14 @@ class Level:
         if self.pinky.bounceCount >= self.pinky.homeDuration:
             self.gate.remove(self.collision_sprites)
 
-    def PlayGame(self):
+    def playGame(self):
         self.visible_sprites.draw(self.screen)
         self.GetHighScore()
         self.PacmanCollisionLogic()
         self.OpenTheGates()
-        self.blinky.update()
-        self.pinky.update()
-        self.inky.update()
-        self.clyde.update()
         self.pacman.update()
+        for ghost in self.ghosts:
+            ghost.update()
         self.DrawScores()
 
     def GetHighScore(self):
@@ -198,46 +186,6 @@ class Level:
     def DrawScores(self):
         self.drawText(f"top score: {self.highscore}", self.scoreFont, self.textColor, (100, 3))
         self.drawText(f"score: {self.score}", self.scoreFont, self.textColor, (350, 3))
-
-    def TitleScreen(self):
-        mouse_pos = pg.mouse.get_pos()
-        if not self.startLevel:
-            title = self.drawText("pacman", self.mainFont, self.textColor, (120, 60))
-            play_button = self.screen.blit(self.play, (180, 170))
-            settings_button = self.screen.blit(self.settings ,(232, 250))
-            exit_button = self.screen.blit(self.exit, (212, 320))
-
-            if play_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    PlayBGM("Level")
-                    self.startLevel = True
-                    pg.time.set_timer(self.GhostchaseMode, 17000)
-
-            elif exit_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    self.main.GameRunning = False
-
-            elif settings_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    self.displaySettings = True
-
-    def SettingsScreen(self):
-        mouse_pos = pg.mouse.get_pos()
-        ghostPath = self.screen.blit(self.path, (100, 170))
-        yesBtn = self.screen.blit(self.yes, (310, 170))
-        noBtn = self.screen.blit(self.no, (380, 170))
-        backBtn = self.screen.blit(self.back ,(100, 310))
-        audio = self.screen.blit(self.audio,(100, 240))
-        self.drawText("controls",self.controlFont,self.textColor,(80, 520))
-        contol = self.screen.blit(self.controls, (320, 460))
-
-        if yesBtn.collidepoint(mouse_pos):
-            if pg.mouse.get_pressed()[0]:
-              self.showTargetTile = True
-
-        if backBtn.collidepoint(mouse_pos):
-            if pg.mouse.get_pressed()[0]:
-              self.displaySettings = False
 
     def GameOverScreen(self):
         mouse_pos = pg.mouse.get_pos()
@@ -258,6 +206,7 @@ class Level:
             elif exit_button.collidepoint(mouse_pos):
                 if pg.mouse.get_pressed()[0]:
                     self.main.GameRunning = False
+
     def ResetPellets(self):
         for pellets in self.pelletsEaten:
             pellets.add(self.visible_sprites,self.eatable_sprites)
@@ -268,10 +217,10 @@ class Level:
     def ResetGhosts(self):
         for ghosts in self.ghosts:
             ghosts.ResetState()
-
             #Resets the Drawing of Layers
             ghosts.remove(self.visible_sprites)
             ghosts.add(self.visible_sprites)
+
 
     def ResetGame(self):
         self.score = 0
@@ -284,18 +233,11 @@ class Level:
 
 
     def run(self):
-
         if self.GameOver():
             self.GameOverScreen()
         else:
-            if self.displaySettings:
-                self.SettingsScreen()
-            else:
-
-                self.TitleScreen()
-
-            if self.startLevel:
-                self.PlayGame()
+            
+            self.playGame()
 
 
 
