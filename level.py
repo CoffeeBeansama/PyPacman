@@ -12,9 +12,9 @@ from mainmenu import MainMenu
 
 class Level:
 
-    def __init__(self,main):
+    def __init__(self,gameOverScreen):
 
-        self.main = main
+        self.gameOverScreen = gameOverScreen
         self.screen = pg.display.get_surface()
 
         self.eatable_sprites = pg.sprite.Group()
@@ -38,7 +38,6 @@ class Level:
 
         self.textColor = (255, 255, 255)
 
-        self.mainFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 40)
         self.controlFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 20)
         self.scoreFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 12)
 
@@ -66,11 +65,6 @@ class Level:
                             self.ObjectEaten("PowerPellet",target_sprite)
                         if target_sprite.object_type == "Ghost":
                             self.ObjectEaten("Ghost",target_sprite)
-
-
-    def drawText(self,text,font,color,pos):
-        text_image = font.render(text,True,color)
-        self.screen.blit(text_image,pos)
 
     def createMap(self):
         for row_index,row in enumerate(map):
@@ -168,44 +162,21 @@ class Level:
         if self.pinky.bounceCount >= self.pinky.homeDuration:
             self.gate.remove(self.collision_sprites)
 
-    def playGame(self):
-        self.visible_sprites.draw(self.screen)
-        self.GetHighScore()
-        self.PacmanCollisionLogic()
-        self.OpenTheGates()
-        self.pacman.update()
-        for ghost in self.ghosts:
-            ghost.update()
-        self.DrawScores()
 
-    def GetHighScore(self):
+    def getHighScore(self):
         currentScore = self.score
         if currentScore >= self.highscore:
             self.highscore = currentScore
 
-    def DrawScores(self):
-        self.drawText(f"top score: {self.highscore}", self.scoreFont, self.textColor, (100, 3))
-        self.drawText(f"score: {self.score}", self.scoreFont, self.textColor, (350, 3))
 
-    def GameOverScreen(self):
-        mouse_pos = pg.mouse.get_pos()
-        if self.GameOver():
+    def drawCurrentScore(self):
+        currentScore = self.scoreFont.render(f"score: {self.score}",True,self.textColor)
+        return self.screen.blit(currentScore,(350,3))
 
-            self.drawText("game over", self.mainFont, self.textColor, (65, 60))
-            play_button = self.screen.blit(self.play, (180, 170))
-            exit_button = self.screen.blit(self.exit, (212,250 ))
-            sadface = self.screen.blit(self.sadFace, (180, 320))
+    def drawHighScore(self):
+        highScore = self.scoreFont.render(f"top score: {self.highscore}",True,self.textColor)
+        return self.screen.blit(highScore,(100,3))
 
-            if play_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    PlayBGM("Level")
-                    self.ResetGame()
-                    self.startLevel = True
-                    pg.time.set_timer(self.GhostchaseMode, 17000)
-
-            elif exit_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    self.main.GameRunning = False
 
     def ResetPellets(self):
         for pellets in self.pelletsEaten:
@@ -231,13 +202,19 @@ class Level:
         self.gate.add(self.collision_sprites)
 
 
-
-    def run(self):
+    def update(self):
         if self.GameOver():
-            self.GameOverScreen()
-        else:
-            
-            self.playGame()
+           self.gameOverScreen()
+
+        self.visible_sprites.draw(self.screen)
+        self.getHighScore()
+        self.PacmanCollisionLogic()
+        self.OpenTheGates()
+        self.pacman.update()
+        for ghost in self.ghosts:
+            ghost.update()
+        self.drawCurrentScore()
+        self.drawHighScore()
 
 
 

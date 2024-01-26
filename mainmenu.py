@@ -3,9 +3,15 @@ from support import loadSprite
 from settings import Sprites
 
 class MainMenu:
-    def __init__(self):
+    def __init__(self,startGame,exitGame):
+        self.startGame = startGame
+        self.exitGame = exitGame
+        self.screen = pg.display.get_surface()
+        self.font = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 40)
+        self.titleText = self.font.render("pacman",True,(255,255,255))
 
         self.displaySettings = False
+
         self.importUISprites()
 
     def importUISprites(self):
@@ -39,27 +45,30 @@ class MainMenu:
             if pg.mouse.get_pressed()[0]:
               self.displaySettings = False
 
+    def drawTitleText(self):
+        return self.screen.blit(self.titleText,(120,62))
+
     def titleScreen(self):
         mouse_pos = pg.mouse.get_pos()
-        if not self.startLevel:
-            title = self.drawText("pacman", self.mainFont, self.textColor, (120, 60))
-            play_button = self.screen.blit(self.play, (180, 170))
-            settings_button = self.screen.blit(self.settings ,(232, 250))
-            exit_button = self.screen.blit(self.exit, (212, 320))
+       
+        self.drawTitleText()
+        play_button = self.screen.blit(self.play, (180, 170))
+        settings_button = self.screen.blit(self.settings ,(232, 250))
+        exit_button = self.screen.blit(self.exit, (212, 320))
 
-            if play_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    PlayBGM("Level")
-                    self.startLevel = True
-                    pg.time.set_timer(self.GhostchaseMode, 17000)
+        if play_button.collidepoint(mouse_pos):
+            if pg.mouse.get_pressed()[0]:
+               PlayBGM("Level")
+               self.startGame()
+               pg.time.set_timer(self.GhostchaseMode, 17000)
 
-            elif exit_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    self.main.GameRunning = False
-
-            elif settings_button.collidepoint(mouse_pos):
-                if pg.mouse.get_pressed()[0]:
-                    self.displaySettings = True
+        elif exit_button.collidepoint(mouse_pos):
+             if pg.mouse.get_pressed()[0]:
+                self.main.GameRunning = False
+                self.exitGame()
+        elif settings_button.collidepoint(mouse_pos):
+             if pg.mouse.get_pressed()[0]:
+                self.displaySettings = True
 
     def update(self):
         self.titleScreen()
