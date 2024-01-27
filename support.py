@@ -21,3 +21,15 @@ def import_folder(path):
 def loadSprite(imagePath, scale):
     newImage = pg.transform.scale(pg.image.load(imagePath),scale)
     return newImage
+
+def drawButton(surface,xPos, yPos, width, height, text):    
+    # Background
+    pg.draw.rect(surface, (255,255,255), (xPos, yPos, width, height))
+    
+    # Button
+    button = pg.draw.rect(surface, (0,0,0), (xPos + 5, yPos + 5, width - 10, height - 10))
+    
+    # Text
+    surface.blit(text, (xPos + 18, yPos + 10))
+
+    return button

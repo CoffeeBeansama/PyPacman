@@ -1,6 +1,7 @@
 import pygame as pg
-from support import loadSprite
+from support import loadSprite,drawButton
 from settings import Sprites
+from eventhandler import EventHandler
 
 class MainMenu:
     def __init__(self,startGame,exitGame):
@@ -9,66 +10,40 @@ class MainMenu:
         self.screen = pg.display.get_surface()
         self.font = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 40)
         self.titleText = self.font.render("pacman",True,(255,255,255))
-
+        
         self.displaySettings = False
+        
+        self.buttonFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 28)
 
-        self.importUISprites()
 
-    def importUISprites(self):
-        self.title = pg.transform.scale(pg.image.load(Sprites["Title"]), (350, 80)).convert_alpha()
-        self.play = pg.transform.scale(pg.image.load(Sprites["Play Button"]), (200, 65)).convert_alpha()
-        self.settings = pg.transform.scale(pg.image.load(Sprites["Settings Button"]), (100, 60)).convert_alpha()
-        self.exit = pg.transform.scale(pg.image.load(Sprites["Exit Button"]), (140, 60)).convert_alpha()
-        self.path = pg.transform.scale(pg.image.load(Sprites["Path Button"]), (200, 65)).convert_alpha()
-        self.yes = pg.transform.scale(pg.image.load(Sprites["Yes Button"]), (60, 60)).convert_alpha()
-        self.no = pg.transform.scale(pg.image.load(Sprites["No Button"]), (60, 60)).convert_alpha()
-        self.back = pg.transform.scale(pg.image.load(Sprites["Back Button"]), (140, 65)).convert_alpha()
-        self.sadFace = pg.transform.scale(pg.image.load(Sprites["GameOver"]), (200, 140)).convert_alpha()
-        self.audio = pg.transform.scale(pg.image.load(Sprites["Audio Button"]), (160, 65)).convert_alpha()
-        self.controls =  pg.transform.scale(pg.image.load(Sprites["Controls"]), (200, 140)).convert_alpha()
+    def playButton(self):
+        text = self.buttonFont.render("play",True,(255,255,255))
+        return drawButton(self.screen,200,220,180,55,text)
 
-    def SettingsScreen(self):
-        mouse_pos = pg.mouse.get_pos()
-        ghostPath = self.screen.blit(self.path, (100, 170))
-        yesBtn = self.screen.blit(self.yes, (310, 170))
-        noBtn = self.screen.blit(self.no, (380, 170))
-        backBtn = self.screen.blit(self.back ,(100, 310))
-        audio = self.screen.blit(self.audio,(100, 240))
-        self.drawText("controls",self.controlFont,self.textColor,(80, 520))
-        contol = self.screen.blit(self.controls, (320, 460))
+    def quitButton(self):
+        text = self.buttonFont.render("quit",True,(255,255,255))
+        return drawButton(self.screen,200,290,180,55,text)
 
-        if yesBtn.collidepoint(mouse_pos):
-            if pg.mouse.get_pressed()[0]:
-              self.showTargetTile = True
-
-        if backBtn.collidepoint(mouse_pos):
-            if pg.mouse.get_pressed()[0]:
-              self.displaySettings = False
+    def handleRendering(self):
+        self.playButton()
+        self.quitButton()
+        self.drawTitleText()
 
     def drawTitleText(self):
         return self.screen.blit(self.titleText,(120,62))
+    
 
-    def titleScreen(self):
-        mouse_pos = pg.mouse.get_pos()
-       
-        self.drawTitleText()
-        play_button = self.screen.blit(self.play, (180, 170))
-        settings_button = self.screen.blit(self.settings ,(232, 250))
-        exit_button = self.screen.blit(self.exit, (212, 320))
+    def handleEventTriggers(self):
+        if self.playButton().collidepoint(EventHandler.mousePosition()):
+           if EventHandler.pressingLeftMouseButton():
+              self.startGame()
+              print("play")
 
-        if play_button.collidepoint(mouse_pos):
-            if pg.mouse.get_pressed()[0]:
-               PlayBGM("Level")
-               self.startGame()
-               pg.time.set_timer(self.GhostchaseMode, 17000)
-
-        elif exit_button.collidepoint(mouse_pos):
-             if pg.mouse.get_pressed()[0]:
-                self.main.GameRunning = False
-                self.exitGame()
-        elif settings_button.collidepoint(mouse_pos):
-             if pg.mouse.get_pressed()[0]:
-                self.displaySettings = True
+        if self.quitButton().collidepoint(EventHandler.mousePosition()):
+           if EventHandler.pressingLeftMouseButton():
+              self.exitGame()
+              print("exit")
 
     def update(self):
-        self.titleScreen()
+        self.handleRendering()
+        self.handleEventTriggers()

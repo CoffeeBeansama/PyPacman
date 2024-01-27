@@ -21,7 +21,7 @@ class Game:
         self.level = Level(self)
         self.gameOver = GameOver()
 
-        self.currentScene = "Level"
+        self.currentScene = "Main Menu"
         self.scenes = {
             "Main Menu" : self.mainMenu.update,
             "Level" : self.level.update,

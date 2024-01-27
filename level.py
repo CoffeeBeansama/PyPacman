@@ -26,8 +26,6 @@ class Level:
         self.pacman_Sprite = pg.sprite.Group()
         
 
-        self.mainMenu = MainMenu()
-
         self.startLevel = True
         self.pacmanEaten = False
         self.showTargetTile = False
