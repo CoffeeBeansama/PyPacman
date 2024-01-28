@@ -11,15 +11,14 @@ class Game:
         pg.init()
         pg.font.init()
 
-        self.GameRunning = True
         self.screen = pg.display.set_mode((WIDTH,HEIGHT))
 
         pg.display.set_caption("PyPacman")
         self.clock = pg.time.Clock()
         
-        self.mainMenu = MainMenu(self.startGame,self.exitGame)
+        self.mainMenu = MainMenu(self.startGame)
         self.level = Level(self)
-        self.gameOver = GameOver()
+        self.gameOver = GameOver(self.level.resetGame)
 
         self.currentScene = "Main Menu"
         self.scenes = {
@@ -36,15 +35,14 @@ class Game:
     def startGame(self):
         self.currentScene = "Level"
 
-    def exitGame(self):
-        self.GameRunning = False
 
     def run(self):
-        while self.GameRunning:
+        while True:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     pg.quit()
                     sys.exit()
+                    break
 
                 if event.type == self.level.PowerPelletEaten:
                     self.level.DisablePowerUp()

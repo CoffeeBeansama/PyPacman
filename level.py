@@ -191,7 +191,7 @@ class Level:
             ghosts.add(self.visible_sprites)
 
 
-    def ResetGame(self):
+    def resetGame(self):
         self.score = 0
         self.pacmanEaten = False
         self.ResetPellets()
