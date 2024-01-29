@@ -7,12 +7,11 @@ from entity import Entity
 from enum import Enum
 from settings import *
 from support import import_folder
-
+from timer import Timer
 
 class StateCache:
     def __init__(self, main):
         self.main = main
-
         self.states = {
             "Home" : HomeState(self,self.main),
             "Scatter" : ScatterState(self,self.main),
@@ -21,15 +20,15 @@ class StateCache:
             "Eaten" : EatenState(self,self.main)
         }
 
-    def HomeState(self):
+    def homeState(self):
         return self.states["Home"]
-    def ScatterState(self):
+    def scatterState(self):
         return self.states["Scatter"]
-    def ChaseState(self):
+    def chaseState(self):
         return self.states["Chase"]
-    def FrightenedState(self):
+    def frightenedState(self):
         return self.states["Frightened"]
-    def EatenState(self):
+    def eatenState(self):
         return self.states["Eaten"]
 
 class BaseState(ABC):
@@ -53,6 +52,7 @@ class BaseState(ABC):
         self.main = main
         self.startTick = pg.time.get_ticks()
         self.HomeDuration = 0
+
 
     def SwitchState(self,newState):
         self.ExitState()
@@ -84,7 +84,7 @@ class HomeState(BaseState):
                     self.main.VerticalMovement(self.main.direction, -1)
 
                 if self.main.hitbox.center == self.main.gatePos:
-                    self.SwitchState(self.stateCache.ScatterState())
+                    self.SwitchState(self.stateCache.scatterState())
 
 
     def HomeIdle(self):
@@ -117,8 +117,9 @@ class ScatterState(BaseState):
 
     def EnterState(self):
         self.main.hitbox.center = self.main.gatePos
-
         self.main.HorizontalMovement(self.main.direction,self.RandomValue()[1])
+        if not self.scatterTimer.activated:
+           self.scatterTimer.activate()
 
     def UpdateState(self):
         self.CheckSwitchState()
@@ -135,13 +136,13 @@ class ScatterState(BaseState):
                 self.main.direction.y = self.main.node_object.availableDirections[index][1]
 
         self.main.movement(ghost_speed)
-
+    
     def CheckSwitchState(self):
         if self.main.player.PowerUp and not self.main.eaten:
-            self.SwitchState(self.stateCache.FrightenedState())
+            self.SwitchState(self.stateCache.frightenedState())
 
         if self.main.chaseState:
-            self.SwitchState(self.stateCache.ChaseState())
+            self.SwitchState(self.stateCache.chaseState())
 
 
     def ExitState(self):
@@ -180,7 +181,7 @@ class ChaseState(BaseState):
 
     def CheckSwitchState(self):
         if self.main.player.PowerUp and not self.main.eaten:
-            self.SwitchState(self.stateCache.FrightenedState())
+            self.SwitchState(self.stateCache.frightenedState())
 
     def ExitState(self):
         self.main.chaseState = False
@@ -214,7 +215,7 @@ class FrightenedState(BaseState):
 
     def CheckSwitchState(self):
         if self.main.player.PowerUp == False:
-            self.SwitchState(self.stateCache.ChaseState())
+            self.SwitchState(self.stateCache.chaseState())
 
 
     def ExitState(self):
@@ -260,7 +261,7 @@ class EatenState(BaseState):
             self.main.VerticalMovement(self.main.direction, -1)
 
         if self.main.rect.center == self.main.gatePos and self.healed:
-            self.SwitchState(self.stateCache.ScatterState())
+            self.SwitchState(self.stateCache.scatterState())
 
     def CheckSwitchState(self):
         self.GoingBackHomeEventSequence()
@@ -277,6 +278,8 @@ class Ghosts(Entity):
         self.chaseState = False
         self.eaten = False
         self.GhostEatenSound = mixer.Sound(Sounds["GhostEaten"])
+        self.scatterTimer = Timer(self.ScatterDuration,self.switchToChaseState)
+
     def importSprites(self):
         path = f"Sprites/Ghosts/Body/"
 
@@ -291,23 +294,26 @@ class Ghosts(Entity):
     def animateEyes(self):
         eye = self.animations[self.spriteDirection][0].convert_alpha()
         return self.screen.blit(eye, (self.rect.x, self.rect.y))
+    
+    def switchToChaseState(self):
+        self.currentState.SwitchState(self.stateCache.chaseState())
 
     def Eaten(self):
-        if self.currentState != self.stateCache.EatenState():
-            self.currentState.SwitchState(self.stateCache.EatenState())
+        if self.currentState != self.stateCache.eatenState():
+            self.currentState.SwitchState(self.stateCache.eatenState())
 
 
     def animate(self):
-        animation = self.animations[self.name] if self.currentState != self.stateCache.FrightenedState() else self.animations["Frightened"]
+        animation = self.animations[self.name] if self.currentState != self.stateCache.frightenedState() else self.animations["Frightened"]
 
         self.frame_index += self.animation_time
         if self.frame_index >= len(animation):
             self.frame_index = 0
 
-        self.image = animation[int(self.frame_index)].convert_alpha()
+        self.image = animation[int(self.frame_index)]
         self.rect = self.image.get_rect(center=self.rect.center)
 
-        if self.currentState != self.stateCache.FrightenedState():
+        if self.currentState != self.stateCache.frightenedState():
             self.animateEyes()
 
 
@@ -355,14 +361,14 @@ class Blinky(Ghosts):
 
 
         self.stateCache = StateCache(self)
-        self.currentState = self.stateCache.ScatterState()
+        self.currentState = self.stateCache.scatterState()
         self.currentState.EnterState()
 
     def TargetTile(self):
         return self.player.rect.center
 
     def ResetState(self):
-        self.currentState = self.stateCache.ScatterState()
+        self.currentState = self.stateCache.scatterState()
         self.currentState.EnterState()
         self.chaseState = False
 
@@ -409,7 +415,7 @@ class Pinky(Ghosts):
         self.importSprites()
 
         self.stateCache = StateCache(self)
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.homeState()
         self.currentState.EnterState()
 
 
@@ -440,7 +446,7 @@ class Pinky(Ghosts):
 
     def ResetState(self):
         self.bounceCount = 0
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.homeState()
         self.currentState.EnterState()
         self.chaseState = False
 
@@ -485,7 +491,7 @@ class Inky(Ghosts):
         self.importSprites()
 
         self.stateCache = StateCache(self)
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.homeState()
         self.currentState.EnterState()
 
     def TargetTile(self):
@@ -526,7 +532,7 @@ class Inky(Ghosts):
 
     def ResetState(self):
         self.bounceCount = 0
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.homeState()
         self.currentState.EnterState()
         self.chaseState = False
     def update(self):
@@ -568,7 +574,7 @@ class Clyde(Ghosts):
 
         self.importSprites()
         self.stateCache = StateCache(self)
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.homeState()
         self.currentState.EnterState()
 
         self.allowedDistanceToPacman = 160
@@ -593,7 +599,7 @@ class Clyde(Ghosts):
 
     def ResetState(self):
         self.bounceCount = 0
-        self.currentState = self.stateCache.HomeState()
+        self.currentState = self.stateCache.homeState()
         self.currentState.EnterState()
         self.chaseState = False
 
