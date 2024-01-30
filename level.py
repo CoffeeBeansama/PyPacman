@@ -9,7 +9,7 @@ from ghost import *
 from portal import Portal
 from Sounds import *
 from mainmenu import MainMenu
-
+from timer import Timer
 class Level:
 
     def __init__(self,gameOverScreen):
@@ -36,19 +36,26 @@ class Level:
 
         self.textColor = (255, 255, 255)
 
-        self.controlFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 20)
-        self.scoreFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 12)
-
-
         self.pelletsEaten = []
         self.ghosts = []
+
+        self.controlFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 20)
+        self.scoreFont = pg.font.Font("Font/NamcoRegular-lgzd.ttf", 12)
 
         self.GhostchaseMode = pg.USEREVENT
         self.StartGame = pg.USEREVENT
         self.PowerPelletEaten = pg.USEREVENT
+        
+        self.powerPelletTimer = Timer(10000,self.DisablePowerUp)
 
         PlayBGM("Menu")
         self.createMap()
+
+        self.collisionTypes = {
+            "pellet" : self.pelletEaten,
+            "PowerPellet": self.powerPelletEaten,
+            "Ghost" : self.ghostCollided
+        }
 
 
     def PacmanCollisionLogic(self):
@@ -57,12 +64,8 @@ class Level:
                 collisionSprite = pg.sprite.spritecollide(pacman, self.eatable_sprites, False)
                 if collisionSprite:
                     for target_sprite in collisionSprite:
-                        if target_sprite.object_type == "pellet":
-                            self.ObjectEaten("Pellet",target_sprite)
-                        if target_sprite.object_type == "PowerPellet":
-                            self.ObjectEaten("PowerPellet",target_sprite)
-                        if target_sprite.object_type == "Ghost":
-                            self.ObjectEaten("Ghost",target_sprite)
+                        handleCollision = self.collisionTypes.get(target_sprite.object_type)
+                        handleCollision(target_sprite)
 
     def createMap(self):
         for row_index,row in enumerate(map):
@@ -115,25 +118,24 @@ class Level:
         self.clyde = Clyde(ghostSprites["Clyde"], [self.visible_sprites, self.eatable_sprites], self.collision_sprites, self.nodes_sprites, self.node, "Ghost", self.pacman, self.portal_sprite,self)
 
         self.ghosts.extend([self.blinky,self.pinky,self.inky,self.clyde])
+    
 
-    def ObjectEaten(self, object,type):
-        match object:
-            case "Pellet":
-                PlaySound("Pellet")
-                self.score += 10
-                type.Eaten([self.visible_sprites, self.eatable_sprites])
-                self.pelletsEaten.append(type)
-
-            case "PowerPellet":
-                self.score += 50
-                PlaySound("PowerPellet")
-                pg.time.set_timer(self.PowerPelletEaten, 10000)
-                type.Eaten(self.pacman, [self.visible_sprites, self.eatable_sprites])
-                self.pelletsEaten.append(type)
-
-            case "Ghost":
-                self.pacman.GhostCollide(type)
-
+    def pelletEaten(self,type):
+        PlaySound("Pellet")
+        self.score += 10
+        type.Eaten([self.visible_sprites, self.eatable_sprites])
+        self.pelletsEaten.append(type)
+    
+    def powerPelletEaten(self,type):
+        if not self.powerPelletTimer.activated:
+           self.powerPelletTimer.activate()
+        self.score += 50 
+        PlaySound("PowerPellet")
+        type.Eaten(self.pacman, [self.visible_sprites, self.eatable_sprites])
+        self.pelletsEaten.append(type)
+    
+    def ghostCollided(self,type):
+        self.pacman.GhostCollide(type)
 
     def DisablePowerUp(self):
         self.pacman.PowerUp = False
@@ -201,6 +203,7 @@ class Level:
 
 
     def update(self):
+        self.powerPelletTimer.update()
         if self.GameOver():
            self.gameOverScreen()
 

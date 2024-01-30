@@ -118,8 +118,8 @@ class ScatterState(BaseState):
     def EnterState(self):
         self.main.hitbox.center = self.main.gatePos
         self.main.HorizontalMovement(self.main.direction,self.RandomValue()[1])
-        if not self.scatterTimer.activated:
-           self.scatterTimer.activate()
+        if not self.main.scatterTimer.activated:
+           self.main.scatterTimer.activate()
 
     def UpdateState(self):
         self.CheckSwitchState()
@@ -277,7 +277,9 @@ class Ghosts(Entity):
         super().__init__(group)
         self.chaseState = False
         self.eaten = False
+
         self.GhostEatenSound = mixer.Sound(Sounds["GhostEaten"])
+
         self.scatterTimer = Timer(self.ScatterDuration,self.switchToChaseState)
 
     def importSprites(self):
@@ -331,12 +333,14 @@ class Ghosts(Entity):
 class Blinky(Ghosts):
 
     def __init__(self, image,group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
+        self.name = "Blinky"
+        self.ScatterDuration = 15000
+
         super().__init__(group)
 
-        self.name = "Blinky"
         self.bounceCount = 0
         self.homeDuration = 0
-        self.ScatterDuration = 15000
+
         self.startingPos = (280,300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
@@ -362,6 +366,7 @@ class Blinky(Ghosts):
 
         self.stateCache = StateCache(self)
         self.currentState = self.stateCache.scatterState()
+
         self.currentState.EnterState()
 
     def TargetTile(self):
@@ -373,7 +378,7 @@ class Blinky(Ghosts):
         self.chaseState = False
 
     def update(self):
-
+        self.scatterTimer.update()
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -384,13 +389,14 @@ class Blinky(Ghosts):
 class Pinky(Ghosts):
 
     def __init__(self, image,group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
-        super().__init__(group)
 
         self.name = "Pinky"
+        self.ScatterDuration = 16000
+
+        super().__init__(group)
 
         self.homeDuration = 2
         self.bounceCount = 0
-        self.ScatterDuration = 16000
         self.startingPos = (290, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
@@ -452,6 +458,7 @@ class Pinky(Ghosts):
 
 
     def update(self):
+        self.scatterTimer.update()
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -461,13 +468,13 @@ class Pinky(Ghosts):
 class Inky(Ghosts):
 
     def __init__(self, image, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,blinky,level):
-        super().__init__(group)
-
         self.name = "Inky"
+        self.ScatterDuration = 17000
+
+        super().__init__(group)
 
         self.homeDuration = 5
         self.bounceCount = 0
-        self.ScatterDuration = 17000
         self.startingPos = (270, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
@@ -536,7 +543,7 @@ class Inky(Ghosts):
         self.currentState.EnterState()
         self.chaseState = False
     def update(self):
-
+        self.scatterTimer.update()
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
@@ -546,12 +553,13 @@ class Inky(Ghosts):
 class Clyde(Ghosts):
 
     def __init__(self, image, group,collidableSprite,node_sprite,node_object,object_type,player,portal_sprite,level):
+        self.name = "Clyde"
+        self.ScatterDuration = 18000
+
         super().__init__(group)
 
-        self.name = "Clyde"
         self.homeDuration = 7
         self.bounceCount = 0
-        self.ScatterDuration = 18000
         self.startingPos = (310, 300)
         self.gatePos = (290, 250)
         self.portals = portal_sprite
@@ -604,7 +612,7 @@ class Clyde(Ghosts):
         self.chaseState = False
 
     def update(self):
-
+        self.scatterTimer.update()
         self.CheckPortalCollision()
         self.currentState.UpdateState()
         self.getSpriteDirection()
